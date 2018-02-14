@@ -1,14 +1,26 @@
 #!/bin/sh
-#--with-cc-opt='-m64 -march=native -DTCP_FASTOPEN=23 -g -fstack-protector-strong -flto -fuse-ld=gold --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf' \
-#--with-openssl-opt="enable-weak-ssl-ciphers enable-tls1_3 -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
-#--with-openssl-opt="enable-weak-ssl-ciphers enable-tls1_3 -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
+### CentOS Passed Settings
+## --with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -fstack-protector-strong -flto -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4 -DNGX_HTTP_HEADERS' \
+## --with-ld-opt='-ljemalloc -Wl,-z,relro' \
+## --with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
+
+### Ubuntu (Maybe) Passed Settings
+## --with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -fstack-protector-strong -flto -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4' \
+## --with-ld-opt='-Wl,-z,relro' \
+## --with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -fuse-linker-plugin'" \
+
+
+### Multithread build
+BUILD_MTS="-j$(expr $(nproc) \+ 1)"
 
 git submodule update --init --recursive
 
 ### PCRE reconf
-cd lib/pcre
-autoreconf -f -i
-cd ../..
+if [ ! -f "lib/pcre/configure" ]; then
+    cd lib/pcre
+    autoreconf -f -i
+    cd ../..
+fi
 
 ### PSOL Download (PageSpeed)
 if [ ! -d "lib/ngx_pagespeed/psol" ]; then
@@ -20,6 +32,7 @@ fi
 auto/configure \
 --with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -fstack-protector-strong -flto -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4 -DNGX_HTTP_HEADERS' \
 --with-ld-opt='-ljemalloc -Wl,-z,relro' \
+--with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
 --builddir=objs --prefix=/usr/local/nginx \
 --conf-path=/etc/nginx/nginx.conf \
 --pid-path=/var/run/nginx.pid \
@@ -36,7 +49,6 @@ auto/configure \
 --with-pcre-jit \
 --with-zlib=./lib/zlib \
 --with-openssl=./lib/openssl \
---with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
 --with-select_module \
 --with-http_v2_hpack_enc \
 --with-http_realip_module \
@@ -86,11 +98,10 @@ auto/configure \
 #touch lib/openssl-1.1.0g/.openssl/include/openssl/ssl.h
 
 ### Install
-make -j8 install
+make $BUILD_MTS install
 
-### Check for Makefile
-
-if [ -f "Makefile" ]; then
+### Check for old files
+if [ -f "/usr/sbin/nginx.old" ]; then
     sleep 1
     rm /usr/sbin/nginx.old
     systemctl restart nginx
