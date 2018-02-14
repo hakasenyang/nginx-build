@@ -214,7 +214,6 @@ typedef struct cipher_order_st {
     const SSL_CIPHER *cipher;
     int active;
     int dead;
-    int in_group;
     struct cipher_order_st *next, *prev;
 } CIPHER_ORDER;
 
@@ -706,7 +705,6 @@ static void ssl_cipher_collect_ciphers(const SSL_METHOD *ssl_method,
         co_list[co_list_num].next = NULL;
         co_list[co_list_num].prev = NULL;
         co_list[co_list_num].active = 0;
-        co_list[co_list_num].in_group = 0;
         co_list_num++;
         /*
          * if (!sk_push(ca_list,(char *)c)) goto err;
@@ -803,8 +801,8 @@ static void ssl_cipher_apply_rule(uint32_t cipher_id, uint32_t alg_mkey,
                                   uint32_t alg_auth, uint32_t alg_enc,
                                   uint32_t alg_mac, int min_tls,
                                   uint32_t algo_strength, int rule,
-                                  int32_t strength_bits, int in_group,
-                                  CIPHER_ORDER **head_p, CIPHER_ORDER **tail_p)
+                                  int32_t strength_bits, CIPHER_ORDER **head_p,
+                                  CIPHER_ORDER **tail_p)
 {
     CIPHER_ORDER *head, *tail, *curr, *next, *last;
     const SSL_CIPHER *cp;
@@ -812,9 +810,9 @@ static void ssl_cipher_apply_rule(uint32_t cipher_id, uint32_t alg_mkey,
 
 #ifdef CIPHER_DEBUG
     fprintf(stderr,
-            "Applying rule %d with %08x/%08x/%08x/%08x/%08x %08x (%d) g:%d\n",
+            "Applying rule %d with %08x/%08x/%08x/%08x/%08x %08x (%d)\n",
             rule, alg_mkey, alg_auth, alg_enc, alg_mac, min_tls,
-            algo_strength, strength_bits, in_group);
+            algo_strength, strength_bits);
 #endif
 
     if (rule == CIPHER_DEL || rule == CIPHER_BUMP)
@@ -889,7 +887,6 @@ static void ssl_cipher_apply_rule(uint32_t cipher_id, uint32_t alg_mkey,
             if (!curr->active) {
                 ll_append_tail(&head, curr, &tail);
                 curr->active = 1;
-                curr->in_group = in_group;
             }
         }
         /* Move the added cipher to this location */
@@ -897,7 +894,6 @@ static void ssl_cipher_apply_rule(uint32_t cipher_id, uint32_t alg_mkey,
             /* reverse == 0 */
             if (curr->active) {
                 ll_append_tail(&head, curr, &tail);
-                curr->in_group = 0;
             }
         } else if (rule == CIPHER_DEL) {
             /* reverse == 1 */
@@ -909,7 +905,6 @@ static void ssl_cipher_apply_rule(uint32_t cipher_id, uint32_t alg_mkey,
                  */
                 ll_append_head(&head, curr, &tail);
                 curr->active = 0;
-                curr->in_group = 0;
             }
         } else if (rule == CIPHER_BUMP) {
             if (curr->active)
@@ -977,8 +972,8 @@ static int ssl_cipher_strength_sort(CIPHER_ORDER **head_p,
      */
     for (i = max_strength_bits; i >= 0; i--)
         if (number_uses[i] > 0)
-            ssl_cipher_apply_rule(0, 0, 0, 0, 0, 0, 0, CIPHER_ORD, i, 0,
-                                  head_p, tail_p);
+            ssl_cipher_apply_rule(0, 0, 0, 0, 0, 0, 0, CIPHER_ORD, i, head_p,
+                                  tail_p);
 
     OPENSSL_free(number_uses);
     return (1);
@@ -992,7 +987,7 @@ static int ssl_cipher_process_rulestr(const char *rule_str,
     uint32_t alg_mkey, alg_auth, alg_enc, alg_mac, algo_strength;
     int min_tls;
     const char *l, *buf;
-    int j, multi, found, rule, retval, ok, buflen, in_group = 0, has_group = 0;
+    int j, multi, found, rule, retval, ok, buflen;
     uint32_t cipher_id = 0;
     char ch;
 
@@ -1003,66 +998,18 @@ static int ssl_cipher_process_rulestr(const char *rule_str,
 
         if (ch == '\0')
             break;              /* done */
-        if (in_group) {
-            if (ch == ']') {
-                if (!in_group) {
-                    SSLerr(SSL_F_SSL_CIPHER_PROCESS_RULESTR,
-                           SSL_R_UNEXPECTED_GROUP_CLOSE);
-                    retval = found = in_group = 0;
-                    break;
-                }
-                if (*tail_p)
-                    (*tail_p)->in_group = 0;
-                in_group = 0;
-                l++;
-                continue;
-            }
-            if (ch == '|') {
-                rule = CIPHER_ADD;
-                l++;
-                continue;
-            } else if (!(ch >= 'a' && ch <= 'z')
-                       && !(ch >= 'A' && ch <= 'Z')
-                       && !(ch >= '0' && ch <= '9')) {
-                SSLerr(SSL_F_SSL_CIPHER_PROCESS_RULESTR,
-                       SSL_R_UNEXPECTED_OPERATOR_IN_GROUP);
-                retval = found = in_group = 0;
-                break;
-            } else {
-                rule = CIPHER_ADD;
-            }
-        } else if (ch == '-') {
+        if (ch == '-') {
             rule = CIPHER_DEL;
             l++;
         } else if (ch == '+') {
             rule = CIPHER_ORD;
             l++;
-        } else if (ch == '!' && has_group) {
-            SSLerr(SSL_F_SSL_CIPHER_PROCESS_RULESTR,
-                   SSL_R_MIXED_SPECIAL_OPERATOR_WITH_GROUPS);
-            retval = found = in_group = 0;
-            break;
         } else if (ch == '!') {
             rule = CIPHER_KILL;
             l++;
-        } else if (ch == '@' && has_group) {
-            SSLerr(SSL_F_SSL_CIPHER_PROCESS_RULESTR,
-                   SSL_R_MIXED_SPECIAL_OPERATOR_WITH_GROUPS);
-            retval = found = in_group = 0;
-            break;
         } else if (ch == '@') {
             rule = CIPHER_SPECIAL;
             l++;
-        } else if (ch == '[') {
-            if (in_group) {
-                SSLerr(SSL_F_SSL_CIPHER_PROCESS_RULESTR, SSL_R_NESTED_GROUP);
-                retval = found = in_group = 0;
-                break;
-            }
-            in_group = 1;
-            has_group = 1;
-            l++;
-            continue;
         } else {
             rule = CIPHER_ADD;
         }
@@ -1104,7 +1051,7 @@ static int ssl_cipher_process_rulestr(const char *rule_str,
                  * alphanumeric, so we call this an error.
                  */
                 SSLerr(SSL_F_SSL_CIPHER_PROCESS_RULESTR, SSL_R_INVALID_COMMAND);
-                retval = found = in_group = 0;
+                retval = found = 0;
                 l++;
                 break;
             }
@@ -1275,19 +1222,14 @@ static int ssl_cipher_process_rulestr(const char *rule_str,
         } else if (found) {
             ssl_cipher_apply_rule(cipher_id,
                                   alg_mkey, alg_auth, alg_enc, alg_mac,
-                                  min_tls, algo_strength, rule, -1, in_group,
-                                  head_p, tail_p);
+                                  min_tls, algo_strength, rule, -1, head_p,
+                                  tail_p);
         } else {
             while ((*l != '\0') && !ITEM_SEP(*l))
                 l++;
         }
         if (*l == '\0')
             break;              /* done */
-    }
-
-    if (in_group) {
-        SSLerr(SSL_F_SSL_CIPHER_PROCESS_RULESTR, SSL_R_INVALID_COMMAND);
-        retval = 0;
     }
 
     return (retval);
@@ -1348,19 +1290,17 @@ static int check_suiteb_cipher_list(const SSL_METHOD *meth, CERT *c,
 }
 #endif
 
-STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
-        struct ssl_cipher_preference_list_st **cipher_list,
-        STACK_OF(SSL_CIPHER) **cipher_list_by_id, const char *rule_str, CERT *c)
+STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method, STACK_OF(SSL_CIPHER)
+                                             **cipher_list, STACK_OF(SSL_CIPHER)
+                                             **cipher_list_by_id,
+                                             const char *rule_str, CERT *c)
 {
     int ok, num_of_ciphers, num_of_alias_max, num_of_group_aliases;
     uint32_t disabled_mkey, disabled_auth, disabled_enc, disabled_mac;
-    STACK_OF(SSL_CIPHER) *cipherstack = NULL, *tmp_cipher_list = NULL;
+    STACK_OF(SSL_CIPHER) *cipherstack, *tmp_cipher_list;
     const char *rule_p;
     CIPHER_ORDER *co_list = NULL, *head = NULL, *tail = NULL, *curr;
     const SSL_CIPHER **ca_list = NULL;
-    uint8_t *in_group_flags = NULL;
-    unsigned int num_in_group_flags = 0;
-    struct ssl_cipher_preference_list_st *pref_list = NULL;
 
     /*
      * Return with error if nothing to do.
@@ -1409,16 +1349,16 @@ STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
      * preference).
      */
     ssl_cipher_apply_rule(0, SSL_kECDHE, SSL_aECDSA, 0, 0, 0, 0, CIPHER_ADD,
-                          -1, 0, &head, &tail);
-    ssl_cipher_apply_rule(0, SSL_kECDHE, 0, 0, 0, 0, 0, CIPHER_ADD, -1, 0,
-                          &head, &tail);
-    ssl_cipher_apply_rule(0, SSL_kECDHE, 0, 0, 0, 0, 0, CIPHER_DEL, -1, 0,
-                          &head, &tail);
+                          -1, &head, &tail);
+    ssl_cipher_apply_rule(0, SSL_kECDHE, 0, 0, 0, 0, 0, CIPHER_ADD, -1, &head,
+                          &tail);
+    ssl_cipher_apply_rule(0, SSL_kECDHE, 0, 0, 0, 0, 0, CIPHER_DEL, -1, &head,
+                          &tail);
 
     /* Within each strength group, we prefer GCM over CHACHA... */
-    ssl_cipher_apply_rule(0, 0, 0, SSL_AESGCM, 0, 0, 0, CIPHER_ADD, -1, 0,
+    ssl_cipher_apply_rule(0, 0, 0, SSL_AESGCM, 0, 0, 0, CIPHER_ADD, -1,
                           &head, &tail);
-    ssl_cipher_apply_rule(0, 0, 0, SSL_CHACHA20, 0, 0, 0, CIPHER_ADD, -1, 0,
+    ssl_cipher_apply_rule(0, 0, 0, SSL_CHACHA20, 0, 0, 0, CIPHER_ADD, -1,
                           &head, &tail);
 
     /*
@@ -1427,13 +1367,13 @@ STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
      * strength.
      */
     ssl_cipher_apply_rule(0, 0, 0, SSL_AES ^ SSL_AESGCM, 0, 0, 0, CIPHER_ADD,
-                          -1, 0, &head, &tail);
+                          -1, &head, &tail);
 
     /* Temporarily enable everything else for sorting */
-    ssl_cipher_apply_rule(0, 0, 0, 0, 0, 0, 0, CIPHER_ADD, -1, 0, &head, &tail);
+    ssl_cipher_apply_rule(0, 0, 0, 0, 0, 0, 0, CIPHER_ADD, -1, &head, &tail);
 
     /* Low priority for MD5 */
-    ssl_cipher_apply_rule(0, 0, 0, 0, SSL_MD5, 0, 0, CIPHER_ORD, -1, 0, &head,
+    ssl_cipher_apply_rule(0, 0, 0, 0, SSL_MD5, 0, 0, CIPHER_ORD, -1, &head,
                           &tail);
 
     /*
@@ -1441,20 +1381,20 @@ STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
      * disabled. (For applications that allow them, they aren't too bad, but
      * we prefer authenticated ciphers.)
      */
-    ssl_cipher_apply_rule(0, 0, SSL_aNULL, 0, 0, 0, 0, CIPHER_ORD, -1, 0, &head,
+    ssl_cipher_apply_rule(0, 0, SSL_aNULL, 0, 0, 0, 0, CIPHER_ORD, -1, &head,
                           &tail);
 
     /*
      * ssl_cipher_apply_rule(0, 0, SSL_aDH, 0, 0, 0, 0, CIPHER_ORD, -1,
-     * 0, &head, &tail);
+     * &head, &tail);
      */
-    ssl_cipher_apply_rule(0, SSL_kRSA, 0, 0, 0, 0, 0, CIPHER_ORD, -1, 0, &head,
+    ssl_cipher_apply_rule(0, SSL_kRSA, 0, 0, 0, 0, 0, CIPHER_ORD, -1, &head,
                           &tail);
-    ssl_cipher_apply_rule(0, SSL_kPSK, 0, 0, 0, 0, 0, CIPHER_ORD, -1, 0, &head,
+    ssl_cipher_apply_rule(0, SSL_kPSK, 0, 0, 0, 0, 0, CIPHER_ORD, -1, &head,
                           &tail);
 
     /* RC4 is sort-of broken -- move the the end */
-    ssl_cipher_apply_rule(0, 0, 0, SSL_RC4, 0, 0, 0, CIPHER_ORD, -1, 0, &head,
+    ssl_cipher_apply_rule(0, 0, 0, SSL_RC4, 0, 0, 0, CIPHER_ORD, -1, &head,
                           &tail);
 
     /*
@@ -1471,7 +1411,7 @@ STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
      * TODO(openssl-team): is there an easier way to accomplish all this?
      */
     ssl_cipher_apply_rule(0, 0, 0, 0, 0, TLS1_2_VERSION, 0, CIPHER_BUMP, -1,
-                          0, &head, &tail);
+                          &head, &tail);
 
     /*
      * Irrespective of strength, enforce the following order:
@@ -1487,14 +1427,14 @@ STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
      * reverse order of preference.
      */
     ssl_cipher_apply_rule(0, 0, 0, 0, SSL_AEAD, 0, 0, CIPHER_BUMP, -1,
-                          0, &head, &tail);
+                          &head, &tail);
     ssl_cipher_apply_rule(0, SSL_kDHE | SSL_kECDHE, 0, 0, 0, 0, 0,
-                          CIPHER_BUMP, -1, 0, &head, &tail);
+                          CIPHER_BUMP, -1, &head, &tail);
     ssl_cipher_apply_rule(0, SSL_kDHE | SSL_kECDHE, 0, 0, SSL_AEAD, 0, 0,
-                          CIPHER_BUMP, -1, 0, &head, &tail);
+                          CIPHER_BUMP, -1, &head, &tail);
 
     /* Now disable everything (maintaining the ordering!) */
-    ssl_cipher_apply_rule(0, 0, 0, 0, 0, 0, 0, CIPHER_DEL, -1, 0, &head, &tail);
+    ssl_cipher_apply_rule(0, 0, 0, 0, 0, 0, 0, CIPHER_DEL, -1, &head, &tail);
 
     /*
      * We also need cipher aliases for selecting based on the rule_str.
@@ -1508,8 +1448,9 @@ STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
     num_of_alias_max = num_of_ciphers + num_of_group_aliases + 1;
     ca_list = OPENSSL_malloc(sizeof(*ca_list) * num_of_alias_max);
     if (ca_list == NULL) {
+        OPENSSL_free(co_list);
         SSLerr(SSL_F_SSL_CREATE_CIPHER_LIST, ERR_R_MALLOC_FAILURE);
-        goto err; /* Failure */
+        return (NULL);          /* Failure */
     }
     ssl_cipher_collect_aliases(ca_list, num_of_group_aliases,
                                disabled_mkey, disabled_auth, disabled_enc,
@@ -1534,19 +1475,19 @@ STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
 
     OPENSSL_free(ca_list);      /* Not needed anymore */
 
-    if (!ok)
-        goto err; /* Rule processing failure */
+    if (!ok) {                  /* Rule processing failure */
+        OPENSSL_free(co_list);
+        return (NULL);
+    }
 
     /*
      * Allocate new "cipherstack" for the result, return with error
      * if we cannot get one.
      */
-    if ((cipherstack = sk_SSL_CIPHER_new_null()) == NULL)
-        goto err;
-
-    in_group_flags = OPENSSL_malloc(num_of_ciphers);
-    if (!in_group_flags)
-        goto err;
+    if ((cipherstack = sk_SSL_CIPHER_new_null()) == NULL) {
+        OPENSSL_free(co_list);
+        return (NULL);
+    }
 
     /*
      * The cipher selection for the list is done. The ciphers are added
@@ -1555,65 +1496,32 @@ STACK_OF(SSL_CIPHER) *ssl_create_cipher_list(const SSL_METHOD *ssl_method,
     for (curr = head; curr != NULL; curr = curr->next) {
         if (curr->active
             && (!FIPS_mode() || curr->cipher->algo_strength & SSL_FIPS)) {
-            if (!sk_SSL_CIPHER_push(cipherstack, curr->cipher))
-                goto err;
-            in_group_flags[num_in_group_flags++] = curr->in_group;
+            if (!sk_SSL_CIPHER_push(cipherstack, curr->cipher)) {
+                OPENSSL_free(co_list);
+                sk_SSL_CIPHER_free(cipherstack);
+                return NULL;
+            }
 #ifdef CIPHER_DEBUG
             fprintf(stderr, "<%s>\n", curr->cipher->name);
 #endif
         }
     }
     OPENSSL_free(co_list);      /* Not needed any longer */
-    co_list = NULL;
 
     tmp_cipher_list = sk_SSL_CIPHER_dup(cipherstack);
-    if (tmp_cipher_list == NULL)
-        goto err;
-
-    pref_list = OPENSSL_malloc(sizeof(struct ssl_cipher_preference_list_st));
-    if (!pref_list)
-        goto err;
-    pref_list->ciphers = cipherstack;
-    pref_list->in_group_flags = OPENSSL_malloc(num_in_group_flags);
-    if (!pref_list->in_group_flags)
-        goto err;
-    memcpy(pref_list->in_group_flags, in_group_flags, num_in_group_flags);
-    OPENSSL_free(in_group_flags);
-    in_group_flags = NULL;
-    if (*cipher_list != NULL)
-        ssl_cipher_preference_list_free(*cipher_list);
-    *cipher_list = pref_list;
-    pref_list = NULL;
-
-    if (cipher_list_by_id != NULL) {
-        if (*cipher_list_by_id != NULL)
-            sk_SSL_CIPHER_free(*cipher_list_by_id);
-        *cipher_list_by_id = tmp_cipher_list;
-        tmp_cipher_list = NULL;
-        (void)sk_SSL_CIPHER_set_cmp_func(*cipher_list_by_id,
-                                         ssl_cipher_ptr_id_cmp);
-        sk_SSL_CIPHER_sort(*cipher_list_by_id);
-    } else {
-        sk_SSL_CIPHER_free(tmp_cipher_list);
-        tmp_cipher_list = NULL;
-    }
-
-    return (cipherstack);
-
-err:
-    if (co_list)
-        OPENSSL_free(co_list);
-    if (in_group_flags)
-        OPENSSL_free(in_group_flags);
-    if (cipherstack)
+    if (tmp_cipher_list == NULL) {
         sk_SSL_CIPHER_free(cipherstack);
-    if (tmp_cipher_list)
-        sk_SSL_CIPHER_free(tmp_cipher_list);
-    if (pref_list && pref_list->in_group_flags)
-        OPENSSL_free(pref_list->in_group_flags);
-    if (pref_list)
-        OPENSSL_free(pref_list);
-    return NULL;
+        return NULL;
+    }
+    sk_SSL_CIPHER_free(*cipher_list);
+    *cipher_list = cipherstack;
+    if (*cipher_list_by_id != NULL)
+        sk_SSL_CIPHER_free(*cipher_list_by_id);
+    *cipher_list_by_id = tmp_cipher_list;
+    (void)sk_SSL_CIPHER_set_cmp_func(*cipher_list_by_id, ssl_cipher_ptr_id_cmp);
+
+    sk_SSL_CIPHER_sort(*cipher_list_by_id);
+    return (cipherstack);
 }
 
 char *SSL_CIPHER_description(const SSL_CIPHER *cipher, char *buf, int len)

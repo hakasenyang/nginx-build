@@ -15,7 +15,7 @@
 *.lib
 *.bak
 *.dwo
-/Makefile
+Makefile
 
 # Lib remove
 /lib/zlib-1.2.11/libz.a

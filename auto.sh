@@ -12,7 +12,7 @@ if [ ! -d "lib/ngx_pagespeed/psol" ]; then
 fi
 
 auto/configure \
---with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -flto -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4 -DNGX_HTTP_HEADERS' \
+--with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -flto -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4 -DNGX_HTTP_HEADERS' \
 --with-ld-opt='-ljemalloc -Wl,-z,relro' \
 --builddir=objs --prefix=/usr/local/nginx \
 --conf-path=/etc/nginx/nginx.conf \

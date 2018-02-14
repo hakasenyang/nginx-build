@@ -2409,8 +2409,6 @@ int ERR_load_SSL_strings(void);
 # define SSL_R_MISSING_SRP_PARAM                          358
 # define SSL_R_MISSING_TMP_DH_KEY                         171
 # define SSL_R_MISSING_TMP_ECDH_KEY                       311
-# define SSL_R_MIXED_SPECIAL_OPERATOR_WITH_GROUPS         101
-# define SSL_R_NESTED_GROUP                               108
 # define SSL_R_NO_CERTIFICATES_RETURNED                   176
 # define SSL_R_NO_CERTIFICATE_ASSIGNED                    177
 # define SSL_R_NO_CERTIFICATE_SET                         179
@@ -2521,9 +2519,7 @@ int ERR_load_SSL_strings(void);
 # define SSL_R_UNABLE_TO_FIND_PUBLIC_KEY_PARAMETERS       239
 # define SSL_R_UNABLE_TO_LOAD_SSL3_MD5_ROUTINES           242
 # define SSL_R_UNABLE_TO_LOAD_SSL3_SHA1_ROUTINES          243
-# define SSL_R_UNEXPECTED_GROUP_CLOSE                     109
 # define SSL_R_UNEXPECTED_MESSAGE                         244
-# define SSL_R_UNEXPECTED_OPERATOR_IN_GROUP               110
 # define SSL_R_UNEXPECTED_RECORD                          245
 # define SSL_R_UNINITIALIZED                              276
 # define SSL_R_UNKNOWN_ALERT_TYPE                         246

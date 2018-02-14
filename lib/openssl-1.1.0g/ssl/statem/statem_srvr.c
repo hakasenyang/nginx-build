@@ -1240,11 +1240,12 @@ MSG_PROCESS_RETURN tls_process_client_hello(SSL *s, PACKET *pkt)
             ciphers = NULL;
 
             /* check if some cipher was preferred by call back */
-            if (pref_cipher == NULL) {
-                pref_cipher = ssl3_choose_cipher(s, s->session->ciphers,
-                                                 ssl_get_cipher_preferences(s));
-            }
-
+            pref_cipher =
+                pref_cipher ? pref_cipher : ssl3_choose_cipher(s,
+                                                               s->
+                                                               session->ciphers,
+                                                               SSL_get_ciphers
+                                                               (s));
             if (pref_cipher == NULL) {
                 al = SSL_AD_HANDSHAKE_FAILURE;
                 SSLerr(SSL_F_TLS_PROCESS_CLIENT_HELLO, SSL_R_NO_SHARED_CIPHER);
@@ -1252,9 +1253,8 @@ MSG_PROCESS_RETURN tls_process_client_hello(SSL *s, PACKET *pkt)
             }
 
             s->session->cipher = pref_cipher;
-            ssl_cipher_preference_list_free(s->cipher_list);
-            s->cipher_list = ssl_cipher_preference_list_from_ciphers(
-                                                       s->session->ciphers);
+            sk_SSL_CIPHER_free(s->cipher_list);
+            s->cipher_list = sk_SSL_CIPHER_dup(s->session->ciphers);
             sk_SSL_CIPHER_free(s->cipher_list_by_id);
             s->cipher_list_by_id = sk_SSL_CIPHER_dup(s->session->ciphers);
         }
@@ -1397,8 +1397,7 @@ WORK_STATE tls_post_process_client_hello(SSL *s, WORK_STATE wst)
                 s->rwstate = SSL_NOTHING;
             }
             cipher =
-                ssl3_choose_cipher(s, s->session->ciphers,
-                                   ssl_get_cipher_preferences(s));
+                ssl3_choose_cipher(s, s->session->ciphers, SSL_get_ciphers(s));
 
             if (cipher == NULL) {
                 SSLerr(SSL_F_TLS_POST_PROCESS_CLIENT_HELLO,
