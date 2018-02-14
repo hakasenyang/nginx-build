@@ -9,12 +9,17 @@
 .openssl
 *.obj
 *.o
+*.a
 *.so
 *.suo
 *.lib
 *.bak
 *.dwo
-Makefile
+/Makefile
+
+# Lib remove
+/lib/zlib-1.2.11/libz.a
+/lib/pcre-8.41/.libs
 
 # Log files
 *.log
