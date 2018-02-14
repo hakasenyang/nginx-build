@@ -3,6 +3,14 @@
 #--with-openssl-opt="enable-weak-ssl-ciphers enable-tls1_3 -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
 #--with-openssl-opt="enable-weak-ssl-ciphers enable-tls1_3 -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
 
+
+### PSOL Download (PageSpeed)
+if [ ! -d "lib/ngx_pagespeed/psol" ]; then
+    cd lib/ngx_pagespeed
+    curl "$(scripts/format_binary_url.sh PSOL_BINARY_URL)" | tar xz
+    cd ../../
+fi
+
 auto/configure \
 --with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -flto -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4 -DNGX_HTTP_HEADERS' \
 --with-ld-opt='-ljemalloc -Wl,-z,relro' \
