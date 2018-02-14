@@ -17,15 +17,9 @@
 *.dwo
 Makefile
 
-# Lib remove
-/lib/zlib-1.2.11/libz.a
-/lib/pcre-8.41/.libs
-
 # Log files
 *.log
-
 
 # ETC.
 autopatch.sh
 autoclear.sh
-
