@@ -3,6 +3,12 @@
 #--with-openssl-opt="enable-weak-ssl-ciphers enable-tls1_3 -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
 #--with-openssl-opt="enable-weak-ssl-ciphers enable-tls1_3 -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
 
+git submodule update --init --recursive
+
+### PCRE reconf
+cd lib/pcre
+autoreconf -f -i
+cd ../..
 
 ### PSOL Download (PageSpeed)
 if [ ! -d "lib/ngx_pagespeed/psol" ]; then
@@ -12,7 +18,7 @@ if [ ! -d "lib/ngx_pagespeed/psol" ]; then
 fi
 
 auto/configure \
---with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -flto -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4 -DNGX_HTTP_HEADERS' \
+--with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -fstack-protector-strong -flto -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4 -DNGX_HTTP_HEADERS' \
 --with-ld-opt='-ljemalloc -Wl,-z,relro' \
 --builddir=objs --prefix=/usr/local/nginx \
 --conf-path=/etc/nginx/nginx.conf \
@@ -75,20 +81,17 @@ auto/configure \
 --add-module=./lib/_s/set-misc-nginx-module \
 --add-module=./lib/naxsi/naxsi_src
 
-# --add-module=./lib/nginx-rtmp-module \
-#cd lib/boringssl
 
-#cmake ./
-#make -j8
-
-#cd ../../
-
+### OpenSSL Skip
 #touch lib/openssl-1.1.0g/.openssl/include/openssl/ssl.h
-#touch lib/boringssl/.openssl/include/openssl/ssl.h
+
+### Install
 make -j8 install
 
-sleep 1
+### Check for Makefile
 
-rm /usr/sbin/nginx.old
-systemctl restart nginx
-
+if [ -f "Makefile" ]; then
+    sleep 1
+    rm /usr/sbin/nginx.old
+    systemctl restart nginx
+fi
