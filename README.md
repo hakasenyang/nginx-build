@@ -2,16 +2,28 @@
 
 My nginx build files.
 
-Please edit for this - https://git.hakase.io/Hakase/nginx-build/blob/master/src/core/nginx.h#L15
+Please edit for this file. - https://git.hakase.io/Hakase/nginx-build/blob/master/src/core/nginx.h#L15
 
 ```c
-#define NGINX_SERVER          `"Hakase-nginx"`
+#define NGINX_SERVER          "Hakase-nginx"
 ```
 
-- [x] Complete tasks
-    - [x] Change git
+Featured
+- Auto SSL Cipher settings
+    - ssl_ciphers
+    - ssl_prefer_server_ciphers
+    - ssl_ecdh_curve
+    - DO NOT USE ssl_dhparam. not required.
+- Prefers ChaCha20 suites with clients that don't have AES-NI (e.g., Android devices)	
+- More library!
+    - headers_more_nginx_module
+    - Google PageSpeed for nginx
+    - and the other.
+- Hpack, SSL Dynamic TLS Records Support. (Thanks to cloudflare!)
+- spdy/3.1 Support.
 
-- [ ] Incomplete tasks
-    - [ ] TLS v1.3
-    - [ ] Auto build (rpm, deb, etc.)
-    - [ ] ETC.
+Upcoming Features
+- [ ] TLS v1.3
+- [ ] Old CHACHA20-POLY1305 support.
+- [ ] Auto build (rpm, deb, etc.)
+- [ ] ETC.
