@@ -26,9 +26,9 @@ auto/configure \
 --http-fastcgi-temp-path=/var/lib/nginx/fastcgi_temp \
 --http-scgi-temp-path=/var/lib/nginx/scgi_temp \
 --http-uwsgi-temp-path=/var/lib/nginx/uwsgi_temp \
---with-pcre=./lib/pcre-8.41 \
+--with-pcre=./lib/pcre \
 --with-pcre-jit \
---with-zlib=./lib/zlib-1.2.11 \
+--with-zlib=./lib/zlib \
 --with-openssl=./lib/openssl \
 --with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
 --with-select_module \
