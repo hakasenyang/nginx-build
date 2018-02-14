@@ -1,0 +1,21 @@
+
+# Copyright (C) Igor Sysoev
+# Copyright (C) Nginx, Inc.
+# perl Configure VC-WIN32 no-shared -DPEDANTIC enable-weak-ssl-ciphers enable-ssl3 enable-ssl3-method enable-tls1_3 enable-rc5 enable-md2 enable-nextprotoneg no-heartbeats
+
+all:
+	cd $(OPENSSL)
+
+	perl Configure VC-WIN64A-masm no-shared				\
+		--prefix="%cd%/openssl" 				\
+		--openssldir="%cd%/openssl/ssl" 			\
+		$(OPENSSL_OPT)
+
+	if exist ms\do_ms.bat (						\
+		ms\do_nasm						\
+		&& $(MAKE) -f ms\nt.mak					\
+		&& $(MAKE) -f ms\nt.mak install				\
+	) else (							\
+		$(MAKE)							\
+		&& $(MAKE) install_sw					\
+	)

@@ -1,0 +1,36 @@
+[submodule "lib/ct-submit"]
+	path = lib/ct-submit
+	url = https://github.com/grahamedgecombe/ct-submit.git
+[submodule "lib/naxsi"]
+	path = lib/naxsi
+	url = https://github.com/nbs-system/naxsi.git
+[submodule "lib/nginx-ct"]
+	path = lib/nginx-ct
+	url = https://github.com/grahamedgecombe/nginx-ct.git
+[submodule "lib/nginx-dav-ext-module"]
+	path = lib/nginx-dav-ext-module
+	url = https://github.com/arut/nginx-dav-ext-module.git
+[submodule "lib/nginx-rtmp-module"]
+	path = lib/nginx-rtmp-module
+	url = https://github.com/arut/nginx-rtmp-module.git
+[submodule "lib/ngx_brotli"]
+	path = lib/ngx_brotli
+	url = https://github.com/google/ngx_brotli.git
+[submodule "lib/ngx_devel_kit"]
+	path = lib/ngx_devel_kit
+	url = https://github.com/simplresty/ngx_devel_kit.git
+[submodule "lib/ngx-fancyindex"]
+	path = lib/ngx-fancyindex
+	url = https://github.com/aperezdc/ngx-fancyindex.git
+[submodule "lib/redis2-nginx-module"]
+	path = lib/redis2-nginx-module
+	url = https://github.com/openresty/redis2-nginx-module.git
+[submodule "lib/_s/headers-more-nginx-module"]
+	path = lib/_s/headers-more-nginx-module
+	url = https://github.com/openresty/headers-more-nginx-module.git
+[submodule "lib/_s/ngx_cache_purge"]
+	path = lib/_s/ngx_cache_purge
+	url = https://github.com/FRiCKLE/ngx_cache_purge.git
+[submodule "lib/_s/set-misc-nginx-module"]
+	path = lib/_s/set-misc-nginx-module
+	url = https://github.com/openresty/set-misc-nginx-module.git

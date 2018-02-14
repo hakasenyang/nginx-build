@@ -1,0 +1,5 @@
+test/tmp
+psol/
+psol-*.tar.gz
+*.*.*.*.tar.gz
+nginx
