@@ -34,3 +34,12 @@
 [submodule "lib/_s/set-misc-nginx-module"]
 	path = lib/_s/set-misc-nginx-module
 	url = https://github.com/openresty/set-misc-nginx-module.git
+[submodule "lib/openssl"]
+	path = lib/openssl
+	url = https://git.hakase.io/Hakase/openssl-custom.git
+[submodule "lib/pcre"]
+	path = lib/pcre
+	url = https://github.com/svn2github/pcre.git
+[submodule "lib/zlib"]
+	path = lib/zlib
+	url = https://github.com/madler/zlib.git

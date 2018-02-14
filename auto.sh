@@ -29,7 +29,7 @@ auto/configure \
 --with-pcre=./lib/pcre-8.41 \
 --with-pcre-jit \
 --with-zlib=./lib/zlib-1.2.11 \
---with-openssl=./lib/openssl-1.1.0g \
+--with-openssl=./lib/openssl \
 --with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
 --with-select_module \
 --with-http_v2_hpack_enc \
