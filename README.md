@@ -8,7 +8,7 @@ Please edit for this file. - https://git.hakase.io/Hakase/nginx-build/blob/maste
 #define NGINX_SERVER          "Hakase-nginx"
 ```
 
-Featured
+Features
 - Auto SSL Cipher settings
     - ssl_ciphers
     - ssl_prefer_server_ciphers
