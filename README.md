@@ -23,7 +23,8 @@ Featured
 - spdy/3.1 Support.
 
 Upcoming Features
-- [ ] TLS v1.3
-- [ ] Old CHACHA20-POLY1305 support.
-- [ ] Auto build (rpm, deb, etc.)
-- [ ] ETC.
+- TLS v1.3 (draft-18)
+- Old CHACHA20-POLY1305 support.
+    - maybe deprecated.
+- Auto build (rpm, deb, etc.)
+- ETC.
