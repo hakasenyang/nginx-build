@@ -15,14 +15,13 @@
 #define NGINX_SERVER          "Hakase-nginx"
 #define NGINX_SERVER_FULL  NGINX_SERVER "/" NGINX_VERSION
 #define NGINX_ORIG             "nginx/" NGINX_VERSION
-// #define NGX_COMPILER "Visual Studio 2015 x64"
-#define NGX_BUILD2            "(GCC)"
+#define NGX_BUILD2            "GCC"
 
 #ifdef NGX_BUILD
-#define NGINX_SERVER_FULL_BUILD  NGINX_SERVER_FULL " " NGX_BUILD2
+#define NGINX_SERVER_FULL_BUILD  NGINX_SERVER_FULL " (" NGX_BUILD2 ")"
 #define NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
 #else
-#define NGINX_SERVER_FULL_BUILD  NGINX_SERVER_FULL " " NGX_BUILD2
+#define NGINX_SERVER_FULL_BUILD  NGINX_SERVER_FULL " (" NGX_BUILD2 ")"
 #define NGINX_VER_BUILD    NGINX_VER
 #endif
 
