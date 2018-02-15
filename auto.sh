@@ -95,7 +95,8 @@ auto/configure \
 
 
 ### OpenSSL Skip
-#touch lib/openssl-1.1.0g/.openssl/include/openssl/ssl.h
+### Do not use it for the FIRST BUILD.
+#touch lib/openssl/.openssl/include/openssl/ssl.h
 
 ### Install
 make $BUILD_MTS install
