@@ -11,11 +11,17 @@
 
 #define nginx_version      1013009
 #define NGINX_VERSION      "1.13.9"
-#define NGINX_VER               "nginx/" NGINX_VERSION " by Hakase"
-#define NGINX_SERVER          "Hakase-nginx"
+#define NGINX_VER          "nginx/" NGINX_VERSION " by Hakase"
 #define NGINX_SERVER_FULL  NGINX_SERVER "/" NGINX_VERSION
-#define NGINX_ORIG             "nginx/" NGINX_VERSION
-#define NGX_BUILD2            "GCC"
+#define NGINX_ORIG         "nginx/" NGINX_VERSION
+#define NGX_BUILD2         "GCC"
+
+
+/*
+ * Edit this
+ */
+#define NGINX_SERVER       "Hakase-nginx"
+
 
 #ifdef NGX_BUILD
 #define NGINX_SERVER_FULL_BUILD  NGINX_SERVER_FULL " (" NGX_BUILD2 ")"
