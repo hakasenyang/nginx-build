@@ -43,3 +43,6 @@
 [submodule "lib/zlib"]
 	path = lib/zlib
 	url = https://github.com/madler/zlib.git
+[submodule "lib/nginx-module-vts"]
+	path = lib/nginx-module-vts
+	url = https://github.com/vozlt/nginx-module-vts.git
