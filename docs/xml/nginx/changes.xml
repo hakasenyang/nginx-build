@@ -5,6 +5,1244 @@
 <change_log title="nginx">
 
 
+<changes ver="1.13.9" date="2018-02-20">
+
+<change type="feature">
+<para lang="ru">
+поддержка HTTP/2 server push;
+директивы http2_push и http2_push_preload.
+</para>
+<para lang="en">
+HTTP/2 server push support;
+the "http2_push" and "http2_push_preload" directives.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании кэша
+в логах могли появляться сообщения "header already sent";
+ошибка появилась в 1.9.13.
+</para>
+<para lang="en">
+"header already sent" alerts might appear in logs
+when using cache;
+the bug had appeared in 1.9.13.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании директивы ssl_verify_client
+в рабочем процессе мог произойти segmentation fault,
+если в виртуальном сервере не был указан SSL-сертификат.
+</para>
+<para lang="en">
+a segmentation fault might occur in a worker process
+if the "ssl_verify_client" directive was used
+and no SSL certificate was specified in a virtual server.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в модуле ngx_http_v2_module.
+</para>
+<para lang="en">
+in the ngx_http_v2_module.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в модуле ngx_http_dav_module.
+</para>
+<para lang="en">
+in the ngx_http_dav_module.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.13.8" date="2017-12-26">
+
+<change type="feature">
+<para lang="ru">
+теперь при использовании параметра transparent директив proxy_bind,
+fastcgi_bind, memcached_bind, scgi_bind и uwsgi_bind
+nginx автоматически сохраняет capability CAP_NET_RAW в рабочих процессах.
+</para>
+<para lang="en">
+now nginx automatically preserves the CAP_NET_RAW capability in worker processes
+when using the "transparent" parameter of the "proxy_bind",
+"fastcgi_bind", "memcached_bind", "scgi_bind", and "uwsgi_bind" directives.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+улучшения в определении размера строки кэша процессора.<br/>
+Спасибо Debayan Ghosh.
+</para>
+<para lang="en">
+improved CPU cache line size detection.<br/>
+Thanks to Debayan Ghosh.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+новые директивы в скриптах подсветки синтаксиса для vim.<br/>
+Спасибо Геннадию Махомеду.
+</para>
+<para lang="en">
+new directives in vim syntax highlighting scripts.<br/>
+Thanks to Gena Makhomed.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+процедура обновления исполняемого файла не работала,
+если после завершения родительского процесса
+новым родительским процессом nginx'а становился процесс с PID, отличным от 1.
+</para>
+<para lang="en">
+binary upgrade refused to work
+if nginx was re-parented to a process with PID different from 1
+after its parent process has finished.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+модуль ngx_http_autoindex_module неправильно обрабатывал запросы с телом.
+</para>
+<para lang="en">
+the ngx_http_autoindex_module incorrectly handled requests with bodies.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в директиве proxy_limit_rate при использовании с директивой keepalive.
+</para>
+<para lang="en">
+in the "proxy_limit_rate" directive when used with the "keepalive" directive.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании "proxy_buffering off" часть ответа могла буферизироваться,
+если клиентское соединение использовало SSL.<br/>
+Спасибо Patryk Lesiewicz.
+</para>
+<para lang="en">
+some parts of a response might be buffered when using "proxy_buffering off"
+if the client connection used SSL.<br/>
+Thanks to Patryk Lesiewicz.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в директиве proxy_cache_background_update.
+</para>
+<para lang="en">
+in the "proxy_cache_background_update" directive.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+переменную вида "${name}" с именем в фигурных скобках
+нельзя было использовать в начале параметра
+не заключив весь параметр в кавычки.
+</para>
+<para lang="en">
+it was not possible to start a parameter
+with a variable in the "${name}" form with the name in curly brackets
+without enclosing the parameter into single or double quotes.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.13.7" date="2017-11-21">
+
+<change type="bugfix">
+<para lang="ru">
+в переменной $upstream_status.
+</para>
+<para lang="en">
+in the $upstream_status variable.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в рабочем процессе мог произойти segmentation fault,
+если бэкенд возвращал ответ "101 Switching Protocols" на подзапрос.
+</para>
+<para lang="en">
+a segmentation fault might occur in a worker process
+if a backend returned a "101 Switching Protocols" response to a subrequest.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+если при переконфигурации изменялся размер зоны разделяемой памяти
+и переконфигурация завершалась неудачно,
+то в главном процессе происходил segmentation fault.
+</para>
+<para lang="en">
+a segmentation fault occurred in a master process
+if a shared memory zone size was changed during a reconfiguration
+and the reconfiguration failed.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в модуле ngx_http_fastcgi_module.
+</para>
+<para lang="en">
+in the ngx_http_fastcgi_module.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+nginx возвращал ошибку 500,
+если в директиве xslt_stylesheet
+были заданы параметры без использования переменных.
+</para>
+<para lang="en">
+nginx returned the 500 error
+if parameters without variables were specified
+in the "xslt_stylesheet" directive.
+</para>
+</change>
+
+<change type="workaround">
+<para lang="ru">
+при использовании варианта библиотеки zlib от Intel
+в лог писались сообщения "gzip filter failed to use preallocated memory".
+</para>
+<para lang="en">
+"gzip filter failed to use preallocated memory" alerts appeared in logs
+when using a zlib library variant from Intel.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+директива worker_shutdown_timeout не работала
+при использовании почтового прокси-сервера
+и при проксировании WebSocket-соединений.
+</para>
+<para lang="en">
+the "worker_shutdown_timeout" directive did not work
+when using mail proxy and when proxying WebSocket connections.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.13.6" date="2017-10-10">
+
+<change type="bugfix">
+<para lang="ru">
+при использовании директивы ssl_preread
+в модуле stream не работало переключение на следующий бэкенд.
+</para>
+<para lang="en">
+switching to the next upstream server in the stream module did not work
+when using the "ssl_preread" directive.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в модуле ngx_http_v2_module.<br/>
+Спасибо Piotr Sikora.
+</para>
+<para lang="en">
+in the ngx_http_v2_module.<br/>
+Thanks to Piotr Sikora.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+nginx не поддерживал даты после 2038 года
+на 32-битных платформах с 64-битным time_t.
+</para>
+<para lang="en">
+nginx did not support dates after the year 2038
+on 32-bit platforms with 64-bit time_t.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в обработке дат до 1970 года и после 10000 года.
+</para>
+<para lang="en">
+in handling of dates prior to the year 1970 and after the year 10000.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в модуле stream таймауты ожидания UDP-пакетов от бэкендов
+не логгировались или логгировались на уровне info вместо error.
+</para>
+<para lang="en">
+in the stream module timeouts waiting for UDP datagrams from upstream servers
+were not logged or logged at the "info" level instead of "error".
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании HTTP/2 nginx мог вернуть ошибку 400,
+не указав в логе причину.
+</para>
+<para lang="en">
+when using HTTP/2 nginx might return the 400 response
+without logging the reason.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в обработке повреждённых файлов кэша.
+</para>
+<para lang="en">
+in processing of corrupted cache files.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при кэшировании ошибок, перехваченных error_page,
+не учитывались заголовки управления кэшированием.
+</para>
+<para lang="en">
+cache control headers were ignored
+when caching errors intercepted by error_page.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании HTTP/2 тело запроса могло быть повреждено.
+</para>
+<para lang="en">
+when using HTTP/2 client request body might be corrupted.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в обработке адресов клиентов при использовании unix domain сокетов.
+</para>
+<para lang="en">
+in handling of client addresses when using unix domain sockets.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании директивы "hash ... consistent" в блоке upstream
+nginx нагружал процессор, если использовались большие веса
+и все или почти все бэкенды были недоступны.
+</para>
+<para lang="en">
+nginx hogged CPU
+when using the "hash ... consistent" directive in the upstream block
+if large weights were used and all or most of the servers were unavailable.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.13.5" date="2017-09-05">
+
+<change type="feature">
+<para lang="ru">
+переменная $ssl_client_escaped_cert.
+</para>
+<para lang="en">
+the $ssl_client_escaped_cert variable.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+директива ssl_session_ticket_key и параметр include директивы geo
+не работали на Windows.
+</para>
+<para lang="en">
+the "ssl_session_ticket_key" directive and
+the "include" parameter of the "geo" directive did not work on Windows.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+на 32-битных платформах
+при запросе более 4 гигабайт с помощью нескольких диапазонов
+возвращалась некорректная длина ответа.
+</para>
+<para lang="en">
+incorrect response length was returned
+on 32-bit platforms when requesting more than 4 gigabytes
+with multiple ranges.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+директива "expires modified" и
+обработка строки If-Range заголовка запроса
+не учитывали время последнего изменения ответа,
+если использовалось проксирование без кэширования.
+</para>
+<para lang="en">
+the "expires modified" directive and
+processing of the "If-Range" request header line
+did not use the response last modification time
+if proxying without caching was used.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.13.4" date="2017-08-08">
+
+<change type="feature">
+<para lang="ru">
+модуль ngx_http_mirror_module.
+</para>
+<para lang="en">
+the ngx_http_mirror_module.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+клиентские соединения могли сбрасываться при тестировании конфигурации,
+если использовался параметр reuseport директивы listen на Linux.
+</para>
+<para lang="en">
+client connections might be dropped during configuration testing
+when using the "reuseport" parameter of the "listen" directive on Linux.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+тело запроса могло быть недоступно в подзапросах,
+если оно было сохранено в файл и использовалось проксирование.
+</para>
+<para lang="en">
+request body might not be available in subrequests
+if it was saved to a file and proxying was used.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+очистка кэша по max_size не работала на Windows.
+</para>
+<para lang="en">
+cleaning cache based on the "max_size" parameter did not work on Windows.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+любое выделение разделяемой памяти на Windows требовало 4096 байт памяти.
+</para>
+<para lang="en">
+any shared memory allocation required 4096 bytes on Windows.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании директивы zone в блоке upstream на Windows
+рабочий процесс мог завершаться аварийно.
+</para>
+<para lang="en">
+nginx worker might be terminated abnormally
+when using the "zone" directive inside the "upstream" block on Windows.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.13.3" date="2017-07-11">
+
+<change type="security">
+<para lang="ru">
+специально созданный запрос мог вызвать целочисленное переполнение
+в range-фильтре и последующую некорректную обработку запрошенных диапазонов,
+что потенциально могло привести к утечке конфиденциальной информации
+(CVE-2017-7529).
+</para>
+<para lang="en">
+a specially crafted request might result in an integer overflow
+and incorrect processing of ranges in the range filter,
+potentially resulting in sensitive information leak
+(CVE-2017-7529).
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.13.2" date="2017-06-27">
+
+<change type="change">
+<para lang="ru">
+теперь при запросе диапазона, начинающегося с 0, из пустого файла
+nginx возвращает ответ 200 вместо 416.
+</para>
+<para lang="en">
+nginx now returns 200 instead of 416
+when a range starting with 0 is requested from an empty file.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+директива add_trailer.<br/>
+Спасибо Piotr Sikora.
+</para>
+<para lang="en">
+the "add_trailer" directive.<br/>
+Thanks to Piotr Sikora.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+nginx не собирался под Cygwin и NetBSD;
+ошибка появилась в 1.13.0.
+</para>
+<para lang="en">
+nginx could not be built on Cygwin and NetBSD;
+the bug had appeared in 1.13.0.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+nginx не собирался под MSYS2 / MinGW 64-bit.<br/>
+Спасибо Orgad Shaneh.
+</para>
+<para lang="en">
+nginx could not be built under MSYS2 / MinGW 64-bit.<br/>
+Thanks to Orgad Shaneh.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании SSI с большим количеством подзапросов
+и proxy_pass с переменными
+в рабочем процессе мог произойти segmentation fault.
+</para>
+<para lang="en">
+a segmentation fault might occur in a worker process
+when using SSI with many includes
+and proxy_pass with variables.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в модуле ngx_http_v2_module.<br/>
+Спасибо Piotr Sikora.
+</para>
+<para lang="en">
+in the ngx_http_v2_module.<br/>
+Thanks to Piotr Sikora.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.13.1" date="2017-05-30">
+
+<change type="feature">
+<para lang="ru">
+теперь в качестве параметра директивы set_real_ip_from
+можно указывать имя хоста.
+</para>
+<para lang="en">
+now a hostname can be used
+as the "set_real_ip_from" directive parameter.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+улучшения в скриптах подсветки синтаксиса для vim.
+</para>
+<para lang="en">
+vim syntax highlighting scripts improvements.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+директива worker_cpu_affinity теперь работает на DragonFly BSD.<br/>
+Спасибо Sepherosa Ziehau.
+</para>
+<para lang="en">
+the "worker_cpu_affinity" directive now works on DragonFly BSD.<br/>
+Thanks to Sepherosa Ziehau.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+SSL renegotiation в соединениях к бэкендам
+не работал при использовании OpenSSL до 1.1.0.
+</para>
+<para lang="en">
+SSL renegotiation on backend connections
+did not work when using OpenSSL before 1.1.0.
+</para>
+</change>
+
+<change type="workaround">
+<para lang="ru">
+nginx не собирался с Oracle Developer Studio 12.5.
+</para>
+<para lang="en">
+nginx could not be built with Oracle Developer Studio 12.5.
+</para>
+</change>
+
+<change type="workaround">
+<para lang="ru">
+теперь cache manager пропускает заблокированные записи
+при очистке кэша по max_size.
+</para>
+<para lang="en">
+now cache manager ignores long locked cache entries
+when cleaning cache based on the "max_size" parameter.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+клиентские SSL-соединения сразу закрывались, если использовался
+отложенный accept и параметр proxy_protocol директивы listen.
+</para>
+<para lang="en">
+client SSL connections were immediately closed if deferred accept
+and the "proxy_protocol" parameter of the "listen" directive were used.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в директиве proxy_cache_background_update.
+</para>
+<para lang="en">
+in the "proxy_cache_background_update" directive.
+</para>
+</change>
+
+<change type="workaround">
+<para lang="ru">
+теперь директива tcp_nodelay
+устанавливает опцию TCP_NODELAY перед SSL handshake.
+</para>
+<para lang="en">
+now the "tcp_nodelay" directive
+sets the TCP_NODELAY option before an SSL handshake.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.13.0" date="2017-04-25">
+
+<change type="change">
+<para lang="ru">
+теперь SSL renegotiation допускается в соединениях к бэкендам.
+</para>
+<para lang="en">
+SSL renegotiation is now allowed on backend connections.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+параметры rcvbuf и sndbuf директив listen
+в почтовом прокси-сервере и модуле stream.
+</para>
+<para lang="en">
+the "rcvbuf" and "sndbuf" parameters of the "listen" directives
+of the mail proxy and stream modules.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+директивы return и error_page теперь могут использоваться для возврата
+перенаправлений с кодом 308.<br/>
+Спасибо Simon Leblanc.
+</para>
+<para lang="en">
+the "return" and "error_page" directives can now be used to return 308
+redirections.<br/>
+Thanks to Simon Leblanc.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+параметр TLSv1.3 в директиве ssl_protocols.
+</para>
+<para lang="en">
+the "TLSv1.3" parameter of the "ssl_protocols" directive.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+при логгировании сигналов теперь указывается PID отправившего сигнал процесса.
+</para>
+<para lang="en">
+when logging signals nginx now logs PID of the process which sent the signal.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в обработке ошибок выделения памяти.
+</para>
+<para lang="en">
+in memory allocation error handling.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+если сервер в модуле stream слушал на wildcard-адресе,
+исходящий адрес ответного UDP-пакета
+мог отличаться от адреса назначения исходного пакета.
+</para>
+<para lang="en">
+if a server in the stream module listened on a wildcard address,
+the source address of a response UDP datagram could differ
+from the original datagram destination address.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.11.13" date="2017-04-04">
+
+<change type="feature">
+<para lang="ru">
+параметр http_429 в директивах proxy_next_upstream, fastcgi_next_upstream,
+scgi_next_upstream и uwsgi_next_upstream.<br/>
+Спасибо Piotr Sikora.
+</para>
+<para lang="en">
+the "http_429" parameter of the "proxy_next_upstream", "fastcgi_next_upstream",
+"scgi_next_upstream", and "uwsgi_next_upstream" directives.<br/>
+Thanks to Piotr Sikora.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в обработке ошибок выделения памяти.
+</para>
+<para lang="en">
+in memory allocation error handling.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании директив sendfile и timer_resolution на Linux
+запросы могли зависать.
+</para>
+<para lang="en">
+requests might hang
+when using the "sendfile" and "timer_resolution" directives on Linux.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании с подзапросами директив sendfile и aio_write
+запросы могли зависать.
+</para>
+<para lang="en">
+requests might hang
+when using the "sendfile" and "aio_write" directives with subrequests.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в модуле ngx_http_v2_module.<br/>
+Спасибо Piotr Sikora.
+</para>
+<para lang="en">
+in the ngx_http_v2_module.<br/>
+Thanks to Piotr Sikora.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании HTTP/2 в рабочем процессе мог произойти segmentation fault.
+</para>
+<para lang="en">
+a segmentation fault might occur in a worker process when using HTTP/2.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+запросы могли зависать
+при использовании с подзапросами директив limit_rate, sendfile_max_chunk,
+limit_req или метода $r->sleep() встроенного перла.
+</para>
+<para lang="en">
+requests might hang
+when using the "limit_rate", "sendfile_max_chunk", "limit_req" directives,
+or the $r->sleep() embedded perl method with subrequests.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в модуле ngx_http_slice_module.
+</para>
+<para lang="en">
+in the ngx_http_slice_module.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.11.12" date="2017-03-24">
+
+<change type="bugfix">
+<para lang="ru">
+nginx мог нагружать процессор;
+ошибка появилась в 1.11.11.
+</para>
+<para lang="en">
+nginx might hog CPU;
+the bug had appeared in 1.11.11.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.11.11" date="2017-03-21">
+
+<change type="feature">
+<para lang="ru">
+директива worker_shutdown_timeout.
+</para>
+<para lang="en">
+the "worker_shutdown_timeout" directive.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+улучшения в скриптах подсветки синтаксиса для vim.<br/>
+Спасибо Wei-Ko Kao.
+</para>
+<para lang="en">
+vim syntax highlighting scripts improvements.<br/>
+Thanks to Wei-Ko Kao.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при попытке установить переменную $limit_rate в пустую строку
+в рабочем процессе мог произойти segmentation fault.
+</para>
+<para lang="en">
+a segmentation fault might occur in a worker process
+if the $limit_rate variable was set to an empty string.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+директивы proxy_cache_background_update, fastcgi_cache_background_update,
+scgi_cache_background_update и uwsgi_cache_background_update
+могли работать некорректно, если использовалась директива if.
+</para>
+<para lang="en">
+the "proxy_cache_background_update", "fastcgi_cache_background_update",
+"scgi_cache_background_update", and "uwsgi_cache_background_update" directives
+might work incorrectly if the "if" directive was used.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в рабочем процессе мог произойти segmentation fault,
+если количество large_client_header_buffers в виртуальном сервере
+отличалось от такового в сервере по умолчанию.
+</para>
+<para lang="en">
+a segmentation fault might occur in a worker process
+if number of large_client_header_buffers in a virtual server
+was different from the one in the default server.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в почтовом прокси-сервере.
+</para>
+<para lang="en">
+in the mail proxy server.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.11.10" date="2017-02-14">
+
+<change type="change">
+<para lang="ru">
+формат заголовка кэша был изменен,
+ранее закэшированные ответы будут загружены заново.
+</para>
+<para lang="en">
+cache header format has been changed,
+previously cached responses will be invalidated.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+поддержка расширений stale-while-revalidate и stale-if-error
+в строке "Cache-Control" в заголовке ответа бэкенда.
+</para>
+<para lang="en">
+support of "stale-while-revalidate" and "stale-if-error" extensions
+in the "Cache-Control" backend response header line.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+директивы proxy_cache_background_update, fastcgi_cache_background_update,
+scgi_cache_background_update и uwsgi_cache_background_update.
+</para>
+<para lang="en">
+the "proxy_cache_background_update", "fastcgi_cache_background_update",
+"scgi_cache_background_update", and "uwsgi_cache_background_update" directives.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+теперь nginx может кэшировать ответы
+со строкой Vary заголовка длиной до 128 символов
+(вместо 42 символов в предыдущих версиях).
+</para>
+<para lang="en">
+nginx is now able to cache responses
+with the "Vary" header line up to 128 characters long
+(instead of 42 characters in previous versions).
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+параметр build директивы server_tokens.<br/>
+Спасибо Tom Thorogood.
+</para>
+<para lang="en">
+the "build" parameter of the "server_tokens" directive.<br/>
+Thanks to Tom Thorogood.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при обработке запросов со строкой "Expect: 100-continue" в заголовке запроса
+в логах могли появляться сообщения "[crit] SSL_write() failed".
+</para>
+<para lang="en">
+"[crit] SSL_write() failed" messages might appear in logs
+when handling requests with the "Expect: 100-continue" request header line.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+модуль ngx_http_slice_module не работал в именованных location'ах.
+</para>
+<para lang="en">
+the ngx_http_slice_module did not work in named locations.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании AIO после перенаправления запроса с помощью X-Accel-Redirect
+в рабочем процессе мог произойти segmentation fault.
+</para>
+<para lang="en">
+a segmentation fault might occur in a worker process
+when using AIO after an "X-Accel-Redirect" redirection.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+уменьшено потребление памяти для долгоживущих запросов, использующих сжатие.
+</para>
+<para lang="en">
+reduced memory consumption for long-lived requests using gzipping.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.11.9" date="2017-01-24">
+
+<change type="bugfix">
+<para lang="ru">
+при использовании модуля stream nginx мог нагружать процессор;
+ошибка появилась в 1.11.5.
+</para>
+<para lang="en">
+nginx might hog CPU when using the stream module;
+the bug had appeared in 1.11.5.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+метод аутентификации EXTERNAL в почтовом прокси-сервере
+можно было использовать, даже если он не был разрешён в конфигурации.
+</para>
+<para lang="en">
+EXTERNAL authentication mechanism in mail proxy
+was accepted even if it was not enabled in the configuration.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании директивы ssl_verify_client модуля stream
+в рабочем процессе мог произойти segmentation fault.
+</para>
+<para lang="en">
+a segmentation fault might occur in a worker process
+if the "ssl_verify_client" directive of the stream module was used.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+директива ssl_verify_client модуля stream могла не работать.
+</para>
+<para lang="en">
+the "ssl_verify_client" directive of the stream module might not work.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при исчерпании рабочим процессом свободных соединений
+keepalive-соединения могли закрываться излишне агрессивно.<br/>
+Спасибо Joel Cunningham.
+</para>
+<para lang="en">
+closing keepalive connections due to no free worker connections
+might be too aggressive.<br/>
+Thanks to Joel Cunningham.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании директивы sendfile на FreeBSD и macOS
+мог возвращаться некорректный ответ;
+ошибка появилась в 1.7.8.
+</para>
+<para lang="en">
+an incorrect response might be returned
+when using the "sendfile" directive on FreeBSD and macOS;
+the bug had appeared in 1.7.8.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании директивы aio_write
+ответ мог сохраняться в кэш не полностью.
+</para>
+<para lang="en">
+a truncated response might be stored in cache
+when using the "aio_write" directive.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+при использовании директивы aio_write
+могла происходить утечка сокетов.
+</para>
+<para lang="en">
+a socket leak might occur
+when using the "aio_write" directive.
+</para>
+</change>
+
+</changes>
+
+
+<changes ver="1.11.8" date="2016-12-27">
+
+<change type="feature">
+<para lang="ru">
+директива absolute_redirect.
+</para>
+<para lang="en">
+the "absolute_redirect" directive.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+параметр escape директивы log_format.
+</para>
+<para lang="en">
+the "escape" parameter of the "log_format" directive.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+проверка клиентских SSL-сертификатов в модуле stream.
+</para>
+<para lang="en">
+client SSL certificates verification in the stream module.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+директива ssl_session_ticket_key поддерживает
+шифрование TLS session tickets с помощью AES256
+при использовании с 80-байтными ключами.
+</para>
+<para lang="en">
+the "ssl_session_ticket_key" directive supports
+AES256 encryption of TLS session tickets
+when used with 80-byte keys.
+</para>
+</change>
+
+<change type="feature">
+<para lang="ru">
+поддержка vim-commentary в скриптах для vim.<br/>
+Спасибо Armin Grodon.
+</para>
+<para lang="en">
+vim-commentary support in vim scripts.<br/>
+Thanks to Armin Grodon.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+рекурсия при получении значений переменных не ограничивалась.
+</para>
+<para lang="en">
+recursion when evaluating variables was not limited.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+в модуле ngx_stream_ssl_preread_module.
+</para>
+<para lang="en">
+in the ngx_stream_ssl_preread_module.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+если сервер, описанный в блоке upstream в модуле stream,
+был признан неработающим, то после истечения fail_timeout он
+признавался работающим только после завершения тестового соединения;
+теперь достаточно, чтобы соединение было успешно установлено.
+</para>
+<para lang="en">
+if a server in an upstream in the stream module failed,
+it was considered alive only when a test connection sent
+to it after fail_timeout was closed;
+now a successfully established connection is enough.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+nginx/Windows не собирался с 64-битным Visual Studio.
+</para>
+<para lang="en">
+nginx/Windows could not be built with 64-bit Visual Studio.
+</para>
+</change>
+
+<change type="bugfix">
+<para lang="ru">
+nginx/Windows не собирался с OpenSSL 1.1.0.
+</para>
+<para lang="en">
+nginx/Windows could not be built with OpenSSL 1.1.0.
+</para>
+</change>
+
+</changes>
+
+
 <changes ver="1.11.7" date="2016-12-13">
 
 <change type="change">
