@@ -2055,17 +2055,6 @@ ngx_http_v2_state_settings_params(ngx_http_v2_connection_t *h2c, u_char *pos,
             h2c->frame_size = value;
             break;
 
-        case NGX_HTTP_V2_HEADER_TABLE_SIZE_SETTING:
-
-            if (value > NGX_HTTP_V2_MAX_HPACK_TABLE_SIZE) {
-                h2c->max_hpack_table_size = NGX_HTTP_V2_MAX_HPACK_TABLE_SIZE;
-            } else {
-                h2c->max_hpack_table_size = value;
-            }
-
-            h2c->indicate_resize = 1;
-            break;
-
         case NGX_HTTP_V2_ENABLE_PUSH_SETTING:
 
             if (value > 1) {
@@ -2085,6 +2074,17 @@ ngx_http_v2_state_settings_params(ngx_http_v2_connection_t *h2c, u_char *pos,
                                                  ngx_http_v2_module);
 
             h2c->concurrent_pushes = ngx_min(value, h2scf->concurrent_pushes);
+            break;
+
+        case NGX_HTTP_V2_HEADER_TABLE_SIZE_SETTING:
+
+            if (value > NGX_HTTP_V2_MAX_HPACK_TABLE_SIZE) {
+                h2c->max_hpack_table_size = NGX_HTTP_V2_MAX_HPACK_TABLE_SIZE;
+            } else {
+                h2c->max_hpack_table_size = value;
+            }
+
+            h2c->indicate_resize = 1;
             break;
 
         default:
