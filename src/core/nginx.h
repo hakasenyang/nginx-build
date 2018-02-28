@@ -20,7 +20,7 @@
 /*
  * Edit this
  */
-#define NGINX_SERVER       "Hakase-nginx"
+#define NGINX_SERVER       "hakase-nginx"
 
 
 #ifdef NGX_BUILD
