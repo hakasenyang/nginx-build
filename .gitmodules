@@ -46,3 +46,6 @@
 [submodule "lib/nginx-module-vts"]
 	path = lib/nginx-module-vts
 	url = https://github.com/vozlt/nginx-module-vts.git
+[submodule "lib/sass-nginx-module"]
+	path = lib/sass-nginx-module
+	url = https://github.com/mneudert/sass-nginx-module.git
