@@ -86,6 +86,7 @@ auto/configure \
 --add-module=./lib/ngx_brotli \
 --add-module=./lib/ngx_pagespeed ${PS_NGX_EXTRA_FLAGS} \
 --add-module=./lib/ngx-fancyindex \
+--add-module=./lib/sass-nginx-module \
 --add-module=./lib/nginx-ct \
 --add-module=./lib/naxsi/naxsi_src \
 --add-module=./lib/nginx-module-vts \
