@@ -1,4 +1,10 @@
 #!/bin/sh
+### GCC 7.x Test Settings
+## --with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS' \
+## --with-ld-opt='-ljemalloc -Wl,-z,relro' \
+## --with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -fuse-linker-plugin'" \
+
+
 ### CentOS Passed Settings
 ## --with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -fstack-protector-strong -flto -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4 -DNGX_HTTP_HEADERS' \
 ## --with-ld-opt='-ljemalloc -Wl,-z,relro' \
@@ -29,10 +35,12 @@ if [ ! -d "lib/ngx_pagespeed/psol" ]; then
     cd ../../
 fi
 
+# not use -flto settings.
+
 auto/configure \
---with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -fstack-protector-strong -flto -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf --param=ssp-buffer-size=4 -DNGX_HTTP_HEADERS' \
+--with-cc-opt='-DTCP_FASTOPEN=23 -m64 -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS' \
 --with-ld-opt='-ljemalloc -Wl,-z,relro' \
---with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -flto -fuse-linker-plugin'" \
+--with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -fuse-linker-plugin'" \
 --builddir=objs --prefix=/usr/local/nginx \
 --conf-path=/etc/nginx/nginx.conf \
 --pid-path=/var/run/nginx.pid \
