@@ -15,7 +15,7 @@
 	url = https://github.com/arut/nginx-rtmp-module.git
 [submodule "lib/ngx_brotli"]
 	path = lib/ngx_brotli
-	url = https://github.com/google/ngx_brotli.git
+	url = https://github.com/eustas/ngx_brotli.git
 [submodule "lib/ngx_devel_kit"]
 	path = lib/ngx_devel_kit
 	url = https://github.com/simplresty/ngx_devel_kit.git
