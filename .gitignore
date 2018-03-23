@@ -23,3 +23,5 @@ Makefile
 # ETC.
 autopatch.sh
 autoclear.sh
+submodule.sh
+
