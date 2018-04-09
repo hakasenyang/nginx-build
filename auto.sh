@@ -58,7 +58,6 @@ auto/configure \
 --with-zlib=./lib/zlib \
 --with-openssl=./lib/openssl \
 --with-select_module \
---with-http_v2_hpack_enc \
 --with-http_realip_module \
 --with-http_addition_module \
 --with-http_sub_module \
@@ -85,7 +84,7 @@ auto/configure \
 --with-http_ssl_module \
 --with-mail_ssl_module \
 --with-http_v2_module \
---with-http_spdy_module \
+--with-http_v2_hpack_enc \
 --with-stream_ssl_module \
 --with-stream_geoip_module \
 --with-stream_realip_module \

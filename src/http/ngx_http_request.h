@@ -444,7 +444,6 @@ struct ngx_http_request_s {
 
     ngx_http_connection_t            *http_connection;
     ngx_http_v2_stream_t             *stream;
-    ngx_http_spdy_stream_t           *spdy_stream;
 
     ngx_http_log_handler_pt           log_handler;
 

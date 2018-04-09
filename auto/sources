@@ -252,12 +252,5 @@ WIN32_SRCS="$CORE_SRCS $EVENT_SRCS \
 NGX_WIN32_ICONS="src/os/win32/nginx.ico"
 NGX_WIN32_RC="src/os/win32/nginx.rc"
 
-HTTP_SPDY_MODULE=ngx_http_spdy_module
-HTTP_SPDY_FILTER_MODULE=ngx_http_spdy_filter_module
-HTTP_SPDY_DEPS="src/http/ngx_http_spdy.h \
-                src/http/ngx_http_spdy_module.h"
-HTTP_SPDY_SRCS="src/http/ngx_http_spdy.c \
-                src/http/ngx_http_spdy_module.c"
-
 
 HTTP_FILE_CACHE_SRCS=src/http/ngx_http_file_cache.c

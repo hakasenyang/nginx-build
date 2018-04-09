@@ -134,7 +134,6 @@ if [ $HTTP = YES ]; then
     #     ngx_http_header_filter
     #     ngx_http_chunked_filter
     #     ngx_http_v2_filter
-    #     ngx_http_spdy_filter
     #     ngx_http_range_header_filter
     #     ngx_http_gzip_filter
     #     ngx_http_postpone_filter
@@ -166,7 +165,6 @@ if [ $HTTP = YES ]; then
                       ngx_http_write_filter_module \
                       ngx_http_header_filter_module \
                       ngx_http_chunked_filter_module \
-                      ngx_http_spdy_filter_module \
                       ngx_http_v2_filter_module \
                       ngx_http_range_header_filter_module \
                       ngx_http_gzip_filter_module \
@@ -229,19 +227,6 @@ if [ $HTTP = YES ]; then
         . auto/module
     fi
 
-
-    if [ $HTTP_SPDY = YES ]; then
-#        ngx_module_name=$HTTP_SPDY_FILTER_MODULE
-        ngx_module_name=ngx_http_spdy_filter_module
-        USE_ZLIB=YES
-        ngx_module_incs=
-        ngx_module_deps=
-        ngx_module_srcs=src/http/ngx_http_spdy_filter_module.c
-        ngx_module_libs=
-        ngx_module_link=$HTTP_SPDY
-
-        . auto/module
-    fi
 
     if :; then
         ngx_module_name=ngx_http_range_header_filter_module
@@ -450,19 +435,6 @@ if [ $HTTP = YES ]; then
                          src/http/v2/ngx_http_v2_module.c"
         ngx_module_libs=
         ngx_module_link=$HTTP_V2
-
-        . auto/module
-    fi
-
-    if [ $HTTP_SPDY = YES ]; then
-        have=NGX_HTTP_SPDY . auto/have
-
-        ngx_module_name=$HTTP_SPDY_MODULE
-        ngx_module_incs=src/http
-        ngx_module_deps=$HTTP_SPDY_DEPS
-        ngx_module_srcs=$HTTP_SPDY_SRCS
-        ngx_module_libs=
-        ngx_module_link=$HTTP_SPDY
 
         . auto/module
     fi
