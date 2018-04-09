@@ -20,7 +20,6 @@ Features
     - Google PageSpeed for nginx
     - and the other.
 - Hpack, SSL Dynamic TLS Records Support. (Thanks to cloudflare!)
-- spdy/3.1 Support.
 
 Upcoming Features
 - TLS v1.3 (draft-18)
