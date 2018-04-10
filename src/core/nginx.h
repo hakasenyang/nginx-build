@@ -9,8 +9,8 @@
 #define _NGINX_H_INCLUDED_
 
 
-#define nginx_version      1013012
-#define NGINX_VERSION      "1.13.12"
+#define nginx_version      1013013
+#define NGINX_VERSION      "1.13.13"
 #define NGINX_VER          "nginx/" NGINX_VERSION " by Hakase"
 #define NGINX_SERVER_FULL  NGINX_SERVER "/" NGINX_VERSION
 #define NGINX_ORIG         "nginx/" NGINX_VERSION
