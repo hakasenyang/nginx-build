@@ -15,6 +15,8 @@
 ## --with-ld-opt='-Wl,-z,relro' \
 ## --with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -fuse-linker-plugin'" \
 
+### Remove Old file
+rm -rf /usr/sbin/nginx.old
 
 ### Multithread build
 BUILD_MTS="-j$(expr $(nproc) \+ 1)"
