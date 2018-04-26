@@ -5,7 +5,7 @@ My nginx build files.
 Please edit for this file. - https://git.hakase.io/Hakase/nginx-build/blob/master/src/core/nginx.h#L23
 
 ```c
-#define NGINX_SERVER          "Hakase-nginx"
+#define NGINX_SERVER          "hakase"
 ```
 
 Features
