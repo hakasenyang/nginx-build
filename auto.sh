@@ -94,7 +94,6 @@ auto/configure \
 --add-module=./lib/ngx_pagespeed ${PS_NGX_EXTRA_FLAGS} \
 --add-module=./lib/ngx-fancyindex \
 --add-module=./lib/naxsi/naxsi_src \
---add-module=./lib/nginx-module-vts \
 --add-module=./lib/nginx-dav-ext-module \
 --add-module=./lib/_s/headers-more-nginx-module \
 
@@ -104,6 +103,7 @@ auto/configure \
 #--add-module=./lib/nginx-ct \
 #--add-module=./lib/_s/ngx_cache_purge \
 #--add-module=./lib/_s/set-misc-nginx-module
+#--add-module=./lib/nginx-module-vts \
 
 
 ### OpenSSL Skip
