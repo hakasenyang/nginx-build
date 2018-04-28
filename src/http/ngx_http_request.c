@@ -1879,7 +1879,9 @@ ngx_http_process_request(ngx_http_request_t *r)
         if (c->ssl == NULL) {
             ngx_log_error(NGX_LOG_INFO, c->log, 0,
                           "client sent plain HTTP request to HTTPS port");
-            ngx_http_finalize_request(r, NGX_HTTP_TO_HTTPS);
+            // Connect 443 port to HTTP = Terminate
+            // ngx_http_finalize_request(r, NGX_HTTP_TO_HTTPS);
+            ngx_http_terminate_request(r, rc);
             return;
         }
 
