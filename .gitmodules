@@ -1,12 +1,9 @@
-[submodule "lib/ct-submit"]
-	path = lib/ct-submit
-	url = https://github.com/grahamedgecombe/ct-submit.git
+[submodule "lib/headers-more-nginx-module"]
+	path = lib/headers-more-nginx-module
+	url = https://github.com/openresty/headers-more-nginx-module.git
 [submodule "lib/naxsi"]
 	path = lib/naxsi
 	url = https://github.com/nbs-system/naxsi.git
-[submodule "lib/nginx-ct"]
-	path = lib/nginx-ct
-	url = https://github.com/grahamedgecombe/nginx-ct.git
 [submodule "lib/nginx-dav-ext-module"]
 	path = lib/nginx-dav-ext-module
 	url = https://github.com/arut/nginx-dav-ext-module.git
@@ -22,18 +19,6 @@
 [submodule "lib/ngx-fancyindex"]
 	path = lib/ngx-fancyindex
 	url = https://github.com/aperezdc/ngx-fancyindex.git
-[submodule "lib/redis2-nginx-module"]
-	path = lib/redis2-nginx-module
-	url = https://github.com/openresty/redis2-nginx-module.git
-[submodule "lib/_s/headers-more-nginx-module"]
-	path = lib/_s/headers-more-nginx-module
-	url = https://github.com/openresty/headers-more-nginx-module.git
-[submodule "lib/_s/ngx_cache_purge"]
-	path = lib/_s/ngx_cache_purge
-	url = https://github.com/FRiCKLE/ngx_cache_purge.git
-[submodule "lib/_s/set-misc-nginx-module"]
-	path = lib/_s/set-misc-nginx-module
-	url = https://github.com/openresty/set-misc-nginx-module.git
 [submodule "lib/openssl"]
 	path = lib/openssl
 	url = https://git.hakase.io/Hakase/openssl-custom.git
@@ -43,9 +28,3 @@
 [submodule "lib/zlib"]
 	path = lib/zlib
 	url = https://github.com/madler/zlib.git
-[submodule "lib/nginx-module-vts"]
-	path = lib/nginx-module-vts
-	url = https://github.com/vozlt/nginx-module-vts.git
-[submodule "lib/sass-nginx-module"]
-	path = lib/sass-nginx-module
-	url = https://github.com/mneudert/sass-nginx-module.git

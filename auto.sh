@@ -95,15 +95,11 @@ auto/configure \
 --add-module=./lib/ngx-fancyindex \
 --add-module=./lib/naxsi/naxsi_src \
 --add-module=./lib/nginx-dav-ext-module \
---add-module=./lib/_s/headers-more-nginx-module \
+--add-module=./lib/headers-more-nginx-module
 
 
 ### Deprecated (maybe) Modules
-#--add-module=./lib/sass-nginx-module \
-#--add-module=./lib/nginx-ct \
-#--add-module=./lib/_s/ngx_cache_purge \
-#--add-module=./lib/_s/set-misc-nginx-module
-#--add-module=./lib/nginx-module-vts \
+#--add-module=./lib/nginx-rtmp-module
 
 
 ### OpenSSL Skip
