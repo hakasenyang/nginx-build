@@ -2,7 +2,7 @@
 
 My nginx build files.
 
-Please edit for this file. - https://git.hakase.io/Hakase/nginx-build/src/branch/master/src/core/nginx.h#L23
+Please edit for this file. - https://git.hakase.app/Hakase/nginx-build/src/branch/master/src/core/nginx.h#L23
 
 ```c
 #define NGINX_SERVER          "hakase"
