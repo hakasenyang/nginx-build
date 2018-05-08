@@ -28,3 +28,5 @@
 [submodule "lib/zlib"]
 	path = lib/zlib
 	url = https://github.com/cloudflare/zlib.git
+	branch = gcc.amd64
+
