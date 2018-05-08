@@ -21,7 +21,7 @@
 	url = https://github.com/aperezdc/ngx-fancyindex.git
 [submodule "lib/openssl"]
 	path = lib/openssl
-	url = https://git.hakase.io/Hakase/openssl-custom.git
+	url = https://git.hakase.app/Hakase/openssl-custom.git
 [submodule "lib/pcre"]
 	path = lib/pcre
 	url = https://github.com/svn2github/pcre.git
