@@ -30,6 +30,13 @@ if [ ! -f "lib/pcre/configure" ]; then
     cd ../..
 fi
 
+### ZLIB reconf
+if [ ! -f "lib/zlib/Makefile" ]; then
+    cd lib/zlib
+    ./configure
+    cd ../..
+fi
+
 ### PSOL Download (PageSpeed)
 if [ ! -d "lib/ngx_pagespeed/psol" ]; then
     cd lib/ngx_pagespeed
