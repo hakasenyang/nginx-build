@@ -16,7 +16,7 @@
 ## --with-openssl-opt="enable-weak-ssl-ciphers -DCFLAGS='-march=native -O3 -fuse-linker-plugin'" \
 
 ### Remove Old file
-rm -rf /usr/sbin/nginx.old
+rm -f /usr/sbin/nginx.old
 
 ### Multithread build
 BUILD_MTS="-j$(expr $(nproc) \+ 1)"
@@ -38,16 +38,27 @@ if [ ! -f "lib/zlib/Makefile" ]; then
 fi
 
 ### PSOL Download (PageSpeed)
-if [ ! -d "lib/ngx_pagespeed/psol" ]; then
-    cd lib/ngx_pagespeed
-    curl "$(scripts/format_binary_url.sh PSOL_BINARY_URL)" | tar xz
-    cd ../../
+if [ ! -d "lib/pagespeed" ]; then
+    ### Download pagespeed
+    cd lib
+    wget -c https://github.com/apache/incubator-pagespeed-ngx/archive/v1.13.35.2-stable.zip
+    unzip v1.13.35.2-stable.zip
+    rm -f v1.13.35.2-stable.zip
+    cd incubator-pagespeed-ngx-1.13.35.2-stable
+
+    ### Download psol
+    wget -c https://dl.google.com/dl/page-speed/psol/1.13.35.2-x64.tar.gz
+    tar -xzvf 1.13.35.2-x64.tar.gz
+    rm -f 1.13.35.2-x64.tar.gz
+    cd ..
+    mv incubator-pagespeed-ngx-1.13.35.2-stable pagespeed
+    cd ..
 fi
 
 auto/configure \
 --with-cc-opt='-DTCP_FASTOPEN=23 -m64 -flto -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS' \
---with-ld-opt='-ljemalloc -Wl,-z,relro' \
---with-openssl-opt="enable-tls13downgrade enable-ec_nistp_64_gcc_128 enable-weak-ssl-ciphers no-ssl3-method" \
+--with-ld-opt='-lrt -ljemalloc -Wl,-z,relro -Wl,-z,now -fPIC' \
+--with-openssl-opt="enable-tls13downgrade enable-ec_nistp_64_gcc_128 enable-weak-ssl-ciphers no-ssl3-method -DCFLAGS='-O3 -march=native -fuse-linker-plugin -ljemalloc'" \
 --builddir=objs --prefix=/usr/local/nginx \
 --conf-path=/etc/nginx/nginx.conf \
 --pid-path=/var/run/nginx.pid \
@@ -98,7 +109,7 @@ auto/configure \
 --with-stream_ssl_preread_module \
 --add-module=./lib/ngx_devel_kit \
 --add-module=./lib/ngx_brotli \
---add-module=./lib/ngx_pagespeed ${PS_NGX_EXTRA_FLAGS} \
+--add-module=./lib/pagespeed ${PS_NGX_EXTRA_FLAGS} \
 --add-module=./lib/ngx-fancyindex \
 --add-module=./lib/naxsi/naxsi_src \
 --add-module=./lib/nginx-dav-ext-module \
