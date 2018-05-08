@@ -63,7 +63,6 @@ auto/configure \
 --with-pcre-jit \
 --with-zlib=./lib/zlib \
 --with-openssl=./lib/openssl \
---with-select_module \
 --with-http_realip_module \
 --with-http_addition_module \
 --with-http_sub_module \
