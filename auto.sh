@@ -1,13 +1,23 @@
 #!/bin/sh
 
 ### Please install library.
-### jemalloc jemalloc-devel libuuid ... the other...
+### jemalloc-devel libuuid-devel libatomic expat-devel unzip autoconf , the other...
 
 ### Remove Old file
 rm -f /usr/sbin/nginx.old
 
+### PageSpeed
+### If you do not want to build PageSpeed, please enter a value other than "y".
+PAGESPEED="y"
+
 ### Multithread build
 BUILD_MTS="-j$(expr $(nproc) \+ 1)"
+
+### x86, x64 check
+### If you do not want optimization, uncomment it.
+### (Comment out existing sources.)
+BITCHK=`getconf LONG_BIT`
+#BITCHK="32"
 
 git submodule update --init --recursive
 
@@ -19,14 +29,23 @@ if [ ! -f "lib/pcre/configure" ]; then
 fi
 
 ### ZLIB reconf
-if [ ! -f "lib/zlib/Makefile" ]; then
-    cd lib/zlib
-    ./configure
-    cd ../..
+if [ "$BITCHK" = "64" ]; then
+    if [ ! -f "lib/zlib/Makefile" ]; then
+        cd lib/zlib
+        ./configure
+        cd ../..
+    fi
+else
+    if [ ! -f "lib/zlib_x86/Makefile" ]; then
+        git submodule add --force https://github.com/madler/zlib.git lib/zlib_x86
+        cd lib/zlib_x86
+        ./configure
+        cd ../..
+    fi
 fi
 
 ### PSOL Download (PageSpeed)
-if [ ! -d "lib/pagespeed" ]; then
+if [ ! -d "lib/pagespeed" ] && [ "$PAGESPEED" = "y" ]; then
     ### Download pagespeed
     cd lib
     wget -c https://github.com/apache/incubator-pagespeed-ngx/archive/v1.13.35.2-stable.zip
@@ -43,10 +62,31 @@ if [ ! -d "lib/pagespeed" ]; then
     cd ..
 fi
 
+### x86, x64 Check (Configuration)
+if [ "$BITCHK" = "64" ]; then
+    BUILD_BIT="-m64 "
+    BUILD_OPENSSL="enable-ec_nistp_64_gcc_128 "
+    BUILD_ZLIB="./lib/zlib"
+    BUILD_LD="-lrt -ljemalloc -Wl,-z,relro -Wl,-z,now -fPIC"
+else
+    BUILD_BIT=""
+    BUILD_OPENSSL=""
+    BUILD_ZLIB="./lib/zlib_x86"
+    BUILD_LD=""
+fi
+
+### PageSpeed Check
+if [ "$PAGESPEED" = "y" ]; then
+    BUILD_PAGESPEED="--add-module=./lib/pagespeed ${PS_NGX_EXTRA_FLAGS}"
+else
+    BUILD_PAGESPEED=""
+fi
+
+
 auto/configure \
---with-cc-opt='-DTCP_FASTOPEN=23 -m64 -flto -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS' \
---with-ld-opt='-lrt -ljemalloc -Wl,-z,relro -Wl,-z,now -fPIC' \
---with-openssl-opt="enable-tls13downgrade enable-ec_nistp_64_gcc_128 enable-weak-ssl-ciphers no-ssl3-method -DCFLAGS='-O3 -march=native -fuse-linker-plugin -ljemalloc'" \
+--with-cc-opt="-DTCP_FASTOPEN=23 ${BUILD_BIT}-flto -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS" \
+--with-ld-opt="${BUILD_LD}" \
+--with-openssl-opt="enable-tls13downgrade ${BUILD_OPENSSL}enable-weak-ssl-ciphers no-ssl3-method -DCFLAGS='-O3 -march=native -fuse-linker-plugin -ljemalloc'" \
 --builddir=objs --prefix=/usr/local/nginx \
 --conf-path=/etc/nginx/nginx.conf \
 --pid-path=/var/run/nginx.pid \
@@ -61,7 +101,7 @@ auto/configure \
 --http-uwsgi-temp-path=/var/lib/nginx/uwsgi_temp \
 --with-pcre=./lib/pcre \
 --with-pcre-jit \
---with-zlib=./lib/zlib \
+--with-zlib=${BUILD_ZLIB} \
 --with-openssl=./lib/openssl \
 --with-http_realip_module \
 --with-http_addition_module \
@@ -81,7 +121,6 @@ auto/configure \
 --with-http_image_filter_module \
 --with-file-aio \
 --with-threads \
---with-google_perftools_module \
 --with-libatomic \
 --with-mail \
 --with-compat \
@@ -96,11 +135,12 @@ auto/configure \
 --with-stream_ssl_preread_module \
 --add-module=./lib/ngx_devel_kit \
 --add-module=./lib/ngx_brotli \
---add-module=./lib/pagespeed ${PS_NGX_EXTRA_FLAGS} \
+${BUILD_PAGESPEED} \
 --add-module=./lib/ngx-fancyindex \
 --add-module=./lib/naxsi/naxsi_src \
 --add-module=./lib/nginx-dav-ext-module \
 --add-module=./lib/headers-more-nginx-module
+
 
 
 ### Deprecated (maybe) Modules
