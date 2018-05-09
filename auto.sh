@@ -16,7 +16,7 @@ if [ ! "$NGX_PID" ]; then NGX_PID="/var/run/nginx.pid"; fi
 if [ ! "$NGX_LOCK" ]; then NGX_LOCK="/var/lock/nginx.lock"; fi
 
 ### Remove Old file
-rm -f /usr/sbin/nginx.old
+rm -f ${NGX_SBIN_PATH}.old
 
 ### Multithread build
 BUILD_MTS="-j$(expr $(nproc) \+ 1)"
@@ -164,8 +164,8 @@ NGX_AUTO_CONFIG_H="objs/ngx_auto_config.h";have="NGINX_SERVER";value="\"${SERVER
 make $BUILD_MTS install
 
 ### Check for old files
-if [ -f "/usr/sbin/nginx.old" ]; then
+if [ -f "${NGX_SBIN_PATH}.old" ]; then
     sleep 1
-    rm /usr/sbin/nginx.old
+    rm ${NGX_SBIN_PATH}.old
     systemctl restart nginx
 fi
