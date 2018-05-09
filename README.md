@@ -2,7 +2,7 @@
 
 My nginx build files.
 
-Please edit for auto.sh file. (SERVER_HEADER, PAGESPEED)
+Please edit for config.inc file. (SERVER_HEADER, Modules...)
 
 Features
 - Auto SSL Cipher settings
