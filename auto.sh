@@ -3,6 +3,11 @@
 ### Read config
 . ./config.inc
 
+### If the value is incorrect, convert to normal data.
+if [ ! "$SERVER_HEADER" ]; then SERVER_HEADER="hakase"; fi
+if [ "$BITCHK" != 32 ] && [ "$BITCHK" != 64 ]; then BITCHK=32; fi
+if [ ! "$BUILD_MTS" ]; then BUILD_MTS="-j2"; fi
+
 ### Remove Old file
 rm -f /usr/sbin/nginx.old
 
@@ -19,7 +24,7 @@ if [ ! -f "lib/pcre/configure" ]; then
 fi
 
 ### ZLIB reconf
-if [ "$BITCHK" = "64" ]; then
+if [ "$BITCHK" = 64 ]; then
     if [ ! -f "lib/zlib/Makefile" ]; then
         cd lib/zlib
         ./configure
@@ -44,16 +49,14 @@ if [ ! -d "lib/pagespeed" ] && [ "$PAGESPEED" = 1 ]; then
     cd incubator-pagespeed-ngx-1.13.35.2-stable
 
     ### Download psol
-    wget -c https://dl.google.com/dl/page-speed/psol/1.13.35.2-x64.tar.gz
-    tar -xzvf 1.13.35.2-x64.tar.gz
-    rm -f 1.13.35.2-x64.tar.gz
+    curl "$(scripts/format_binary_url.sh PSOL_BINARY_URL)" | tar xz
     cd ..
     mv incubator-pagespeed-ngx-1.13.35.2-stable pagespeed
     cd ..
 fi
 
 ### x86, x64 Check (Configuration)
-if [ "$BITCHK" = "64" ]; then
+if [ "$BITCHK" = 64 ]; then
     BUILD_BIT="-m64 "
     BUILD_OPENSSL="enable-ec_nistp_64_gcc_128 "
     BUILD_ZLIB="./lib/zlib"

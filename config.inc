@@ -1,3 +1,5 @@
+#!/bin/sh
+
 ### Please install library.
 ### CentOS / Red Hat - yum install jemalloc-devel libuuid-devel libatomic expat-devel unzip autoconf automake libtool
 ### Ubuntu / Debian - apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool
@@ -15,7 +17,7 @@ SERVER_HEADER="hakase"
 ### (Comment out existing sources.)
 ### Do not modify it under normal circumstances.
 BITCHK=`getconf LONG_BIT`
-#BITCHK="32"
+#BITCHK=32
 
 ### Multithread build
 ### Do not modify it under normal circumstances.
