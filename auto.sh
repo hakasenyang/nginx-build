@@ -65,11 +65,9 @@ else
     BUILD_LD=""
 fi
 
-### PageSpeed Check
+### Module check
 if [ "$PAGESPEED" = "y" ]; then
     BUILD_MODULES="--add-module=./lib/pagespeed ${PS_NGX_EXTRA_FLAGS}"
-else
-    BUILD_MODULES=""
 fi
 
 if [ "$RTMP" = "y" ]; then
@@ -144,9 +142,6 @@ auto/configure \
 --add-module=./lib/headers-more-nginx-module \
 ${BUILD_MODULES}
 
-
-### Deprecated (maybe) Modules
-### NO
 
 ### OpenSSL Skip
 ### Do not use it for the FIRST BUILD.
