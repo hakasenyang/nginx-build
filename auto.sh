@@ -35,7 +35,7 @@ else
 fi
 
 ### PSOL Download (PageSpeed)
-if [ ! -d "lib/pagespeed" ] && [ "$PAGESPEED" = "y" ]; then
+if [ ! -d "lib/pagespeed" ] && [ "$PAGESPEED" = 1 ]; then
     ### Download pagespeed
     cd lib
     wget -c https://github.com/apache/incubator-pagespeed-ngx/archive/v1.13.35.2-stable.zip
@@ -66,23 +66,23 @@ else
 fi
 
 ### Module check
-if [ "$PAGESPEED" = "y" ]; then
+if [ "$PAGESPEED" = 1 ]; then
     BUILD_MODULES="--add-module=./lib/pagespeed ${PS_NGX_EXTRA_FLAGS}"
 fi
 
-if [ "$RTMP" = "y" ]; then
+if [ "$RTMP" = 1 ]; then
     BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/nginx-rtmp-module"
 fi
 
-if [ "$NAXSI" = "y" ]; then
+if [ "$NAXSI" = 1 ]; then
     BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/naxsi/naxsi_src"
 fi
 
-if [ "$DAV_EXT" = "y" ]; then
+if [ "$DAV_EXT" = 1 ]; then
     BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/nginx-dav-ext-module"
 fi
 
-if [ "$FANCYINDEX" = "y" ]; then
+if [ "$FANCYINDEX" = 1 ]; then
     BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/ngx-fancyindex"
 fi
 
