@@ -108,8 +108,8 @@ auto/configure \
 --http-log-path=${NGX_LOG}/access.log \
 --error-log-path=${NGX_LOG}/error.log \
 --sbin-path=${NGX_SBIN_PATH} \
---http-client-body-temp-path=${NGX_LIB}/nginx/client_body_temp \
---http-proxy-temp-path=${NGX_LIB}/nginx/proxy_temp \
+--http-client-body-temp-path=${NGX_LIB}/client_body_temp \
+--http-proxy-temp-path=${NGX_LIB}/proxy_temp \
 --http-fastcgi-temp-path=${NGX_LIB}/fastcgi_temp \
 --http-scgi-temp-path=${NGX_LIB}/scgi_temp \
 --http-uwsgi-temp-path=${NGX_LIB}/uwsgi_temp \
