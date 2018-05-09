@@ -7,6 +7,13 @@
 if [ ! "$SERVER_HEADER" ]; then SERVER_HEADER="hakase"; fi
 if [ "$BITCHK" != 32 ] && [ "$BITCHK" != 64 ]; then BITCHK=32; fi
 if [ ! "$BUILD_MTS" ]; then BUILD_MTS="-j2"; fi
+if [ ! "$NGX_PREFIX" ]; then NGX_PREFIX="/usr/local/nginx"; fi
+if [ ! "$NGX_SBIN_PATH" ]; then NGX_SBIN_PATH="/usr/sbin/nginx"; fi
+if [ ! "$NGX_CONF" ]; then NGX_CONF="/etc/nginx/nginx.conf"; fi
+if [ ! "$NGX_LIB" ]; then NGX_LIB="/var/lib/nginx"; fi
+if [ ! "$NGX_LOG" ]; then NGX_LOG="/var/log/nginx"; fi
+if [ ! "$NGX_PID" ]; then NGX_PID="/var/run/nginx.pid"; fi
+if [ ! "$NGX_LOCK" ]; then NGX_LOCK="/var/lock/nginx.lock"; fi
 
 ### Remove Old file
 rm -f /usr/sbin/nginx.old
@@ -94,18 +101,18 @@ auto/configure \
 --with-cc-opt="-DTCP_FASTOPEN=23 ${BUILD_BIT}-flto -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS" \
 --with-ld-opt="${BUILD_LD}" \
 --with-openssl-opt="enable-tls13downgrade ${BUILD_OPENSSL}enable-weak-ssl-ciphers no-ssl3-method -DCFLAGS='-O3 -march=native -fuse-linker-plugin -ljemalloc'" \
---builddir=objs --prefix=/usr/local/nginx \
---conf-path=/etc/nginx/nginx.conf \
---pid-path=/var/run/nginx.pid \
---lock-path=/var/lock/nginx.lock \
---http-log-path=/var/log/nginx/access.log \
---error-log-path=/var/log/nginx/error.log \
---sbin-path=/usr/sbin/nginx \
---http-client-body-temp-path=/var/lib/nginx/client_body_temp \
---http-proxy-temp-path=/var/lib/nginx/proxy_temp \
---http-fastcgi-temp-path=/var/lib/nginx/fastcgi_temp \
---http-scgi-temp-path=/var/lib/nginx/scgi_temp \
---http-uwsgi-temp-path=/var/lib/nginx/uwsgi_temp \
+--builddir=objs --prefix=${NGX_PREFIX} \
+--conf-path=${NGX_CONF} \
+--pid-path=${NGX_PID} \
+--lock-path=${NGX_LOCK} \
+--http-log-path=${NGX_LOG}/access.log \
+--error-log-path=${NGX_LOG}/error.log \
+--sbin-path=${NGX_SBIN_PATH} \
+--http-client-body-temp-path=${NGX_LIB}/nginx/client_body_temp \
+--http-proxy-temp-path=${NGX_LIB}/nginx/proxy_temp \
+--http-fastcgi-temp-path=${NGX_LIB}/fastcgi_temp \
+--http-scgi-temp-path=${NGX_LIB}/scgi_temp \
+--http-uwsgi-temp-path=${NGX_LIB}/uwsgi_temp \
 --with-pcre=./lib/pcre \
 --with-pcre-jit \
 --with-zlib=${BUILD_ZLIB} \

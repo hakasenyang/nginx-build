@@ -1,8 +1,8 @@
 #!/bin/sh
 
 ### Please install library.
-### CentOS / Red Hat - yum install jemalloc-devel libuuid-devel libatomic expat-devel unzip autoconf automake libtool
-### Ubuntu / Debian - apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool
+### CentOS / Red Hat - yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel geoip-devel gcc-c++
+### Ubuntu / Debian - apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool libgd-dev libgeoip-dev g++
 
 ######################
 ### Default Config ###
@@ -43,3 +43,28 @@ DAV_EXT=1
 
 ### fancyindex
 FANCYINDEX=1
+
+##########################
+### nginx install path ###
+##########################
+
+### Prefix
+NGX_PREFIX="/usr/local/nginx"
+
+### Binary
+NGX_SBIN_PATH="/usr/sbin/nginx"
+
+### Config Path
+NGX_CONF="/etc/nginx/nginx.conf"
+
+### Temp Path (client_body_temp, proxy_temp, ...)
+NGX_LIB="/var/lib/nginx"
+
+### Log path
+NGX_LOG="/var/log/nginx"
+
+### PID file
+NGX_PID="/var/run/nginx.pid"
+
+### Lock file
+NGX_LOCK="/var/lock/nginx.lock"
