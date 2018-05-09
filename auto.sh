@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
 ### Read config
-source ./config.inc
+. ./config.inc
 
 ### Remove Old file
 rm -f /usr/sbin/nginx.old
