@@ -1,22 +1,7 @@
 #!/bin/sh
 
-### Please install library.
-### CentOS / Red Hat - yum install jemalloc-devel libuuid-devel libatomic expat-devel unzip autoconf automake libtool
-### Ubuntu / Debian - apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool
-
-### SERVER HEADER!!!
-### Please edit this
-SERVER_HEADER="hakase"
-
-### x86, x64 check
-### If you do not want optimization, uncomment it.
-### (Comment out existing sources.)
-BITCHK=`getconf LONG_BIT`
-#BITCHK="32"
-
-### PageSpeed
-### If you do not want to build PageSpeed, please enter a value other than "y".
-PAGESPEED="y"
+### Read config
+source ./config.inc
 
 ### Remove Old file
 rm -f /usr/sbin/nginx.old
@@ -82,9 +67,25 @@ fi
 
 ### PageSpeed Check
 if [ "$PAGESPEED" = "y" ]; then
-    BUILD_PAGESPEED="--add-module=./lib/pagespeed ${PS_NGX_EXTRA_FLAGS}"
+    BUILD_MODULES="--add-module=./lib/pagespeed ${PS_NGX_EXTRA_FLAGS}"
 else
-    BUILD_PAGESPEED=""
+    BUILD_MODULES=""
+fi
+
+if [ "$RTMP" = "y" ]; then
+    BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/nginx-rtmp-module"
+fi
+
+if [ "$NAXSI" = "y" ]; then
+    BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/naxsi/naxsi_src"
+fi
+
+if [ "$DAV_EXT" = "y" ]; then
+    BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/nginx-dav-ext-module"
+fi
+
+if [ "$FANCYINDEX" = "y" ]; then
+    BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/ngx-fancyindex"
 fi
 
 
@@ -140,12 +141,8 @@ auto/configure \
 --with-stream_ssl_preread_module \
 --add-module=./lib/ngx_devel_kit \
 --add-module=./lib/ngx_brotli \
-${BUILD_PAGESPEED} \
---add-module=./lib/ngx-fancyindex \
---add-module=./lib/nginx-rtmp-module \
---add-module=./lib/naxsi/naxsi_src \
---add-module=./lib/nginx-dav-ext-module \
---add-module=./lib/headers-more-nginx-module
+--add-module=./lib/headers-more-nginx-module \
+${BUILD_MODULES}
 
 
 ### Deprecated (maybe) Modules
