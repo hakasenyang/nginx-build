@@ -1,23 +1,28 @@
 #!/bin/sh
 
 ### Please install library.
-### jemalloc-devel libuuid-devel libatomic expat-devel unzip autoconf , the other...
+### CentOS / Red Hat - yum install jemalloc-devel libuuid-devel libatomic expat-devel unzip autoconf automake libtool
+### Ubuntu / Debian - apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool
 
-### Remove Old file
-rm -f /usr/sbin/nginx.old
-
-### PageSpeed
-### If you do not want to build PageSpeed, please enter a value other than "y".
-PAGESPEED="y"
-
-### Multithread build
-BUILD_MTS="-j$(expr $(nproc) \+ 1)"
+### SERVER HEADER!!!
+### Please edit this
+SERVER_HEADER="hakase"
 
 ### x86, x64 check
 ### If you do not want optimization, uncomment it.
 ### (Comment out existing sources.)
 BITCHK=`getconf LONG_BIT`
 #BITCHK="32"
+
+### PageSpeed
+### If you do not want to build PageSpeed, please enter a value other than "y".
+PAGESPEED="y"
+
+### Remove Old file
+rm -f /usr/sbin/nginx.old
+
+### Multithread build
+BUILD_MTS="-j$(expr $(nproc) \+ 1)"
 
 git submodule update --init --recursive
 
@@ -137,19 +142,21 @@ auto/configure \
 --add-module=./lib/ngx_brotli \
 ${BUILD_PAGESPEED} \
 --add-module=./lib/ngx-fancyindex \
+--add-module=./lib/nginx-rtmp-module \
 --add-module=./lib/naxsi/naxsi_src \
 --add-module=./lib/nginx-dav-ext-module \
 --add-module=./lib/headers-more-nginx-module
 
 
-
 ### Deprecated (maybe) Modules
-#--add-module=./lib/nginx-rtmp-module
-
+### NO
 
 ### OpenSSL Skip
 ### Do not use it for the FIRST BUILD.
 #touch lib/openssl/.openssl/include/openssl/ssl.h
+
+### SERVER HEADER CONFIG
+NGX_AUTO_CONFIG_H="objs/ngx_auto_config.h";have="NGINX_SERVER";value="\"${SERVER_HEADER}\""; . auto/define
 
 ### Install
 make $BUILD_MTS install

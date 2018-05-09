@@ -14,20 +14,13 @@
 #define NGINX_VER          "nginx/" NGINX_VERSION " by Hakase"
 #define NGINX_SERVER_FULL  NGINX_SERVER "/" NGINX_VERSION
 #define NGINX_ORIG         "nginx/" NGINX_VERSION
-#define NGX_BUILD2         "GCC"
-
-
-/*
- * Edit this
- */
-#define NGINX_SERVER       "hakase"
 
 
 #ifdef NGX_BUILD
-#define NGINX_SERVER_FULL_BUILD  NGINX_SERVER_FULL " (" NGX_BUILD2 ")"
+#define NGINX_SERVER_FULL_BUILD  NGINX_SERVER_FULL " (" NGX_BUILD ")"
 #define NGINX_VER_BUILD    NGINX_VER " (" NGX_BUILD ")"
 #else
-#define NGINX_SERVER_FULL_BUILD  NGINX_SERVER_FULL " (" NGX_BUILD2 ")"
+#define NGINX_SERVER_FULL_BUILD  NGINX_SERVER_FULL
 #define NGINX_VER_BUILD    NGINX_VER
 #endif
 
