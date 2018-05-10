@@ -9,7 +9,7 @@
 1. Install dependency library. (If you have already install it, omit it.)
 2. Edit for config.inc file. (SERVER_HEADER, Modules, ETC.)
 3. Run ./auto.sh
-4. Install [systemctl file](https://www.nginx.com/resources/wiki/start/topics/examples/systemd/) (If you have already install it, omit it.)
+4. Install [systemd file](https://www.nginx.com/resources/wiki/start/topics/examples/systemd/) (If you have already install it, omit it.)
 5. Check version and error test : **nginx -v; nginx -t;**
 5. systemctl restart nginx
 6. **The END!!**
