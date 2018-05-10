@@ -1,9 +1,5 @@
 #!/bin/sh
 
-### Please install library.
-### CentOS / Red Hat - yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel geoip-devel gcc-c++
-### Ubuntu / Debian - apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool libgd-dev libgeoip-dev g++
-
 ######################
 ### Default Config ###
 ######################
