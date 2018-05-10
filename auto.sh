@@ -163,6 +163,9 @@ NGX_AUTO_CONFIG_H="objs/ngx_auto_config.h";have="NGINX_SERVER";value="\"${SERVER
 ### Install
 make $BUILD_MTS install
 
+### Make directory NGX_LIB
+mkdir -p ${NGX_LIB}
+
 ### Check for old files
 if [ -f "${NGX_SBIN_PATH}.old" ]; then
     sleep 1
