@@ -8,6 +8,9 @@
 ## How to Install?
 1. Install dependency library. (If you have already install it, omit it.)
 2. Edit for config.inc file. (SERVER_HEADER, Modules, ETC.)
+    - If you receive the source for the first time, type the following command to set it.
+    - Then modify config.inc.
+    - cp config.inc.example config.inc
 3. Run ./auto.sh
 4. Install [systemd file](https://www.nginx.com/resources/wiki/start/topics/examples/systemd/) (If you have already install it, omit it.)
 5. Check version and error test : **nginx -v; nginx -t;**
