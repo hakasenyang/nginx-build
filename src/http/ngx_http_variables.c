@@ -132,8 +132,6 @@ static ngx_int_t ngx_http_variable_connection_requests(ngx_http_request_t *r,
 
 static ngx_int_t ngx_http_variable_nginx_version(ngx_http_request_t *r,
     ngx_http_variable_value_t *v, uintptr_t data);
-static ngx_int_t ngx_http_variable_nginx_full_version(ngx_http_request_t *r,
-    ngx_http_variable_value_t *v, uintptr_t data);
 static ngx_int_t ngx_http_variable_hostname(ngx_http_request_t *r,
     ngx_http_variable_value_t *v, uintptr_t data);
 static ngx_int_t ngx_http_variable_pid(ngx_http_request_t *r,
@@ -335,9 +333,6 @@ static ngx_http_variable_t  ngx_http_core_variables[] = {
       ngx_http_variable_connection_requests, 0, 0, 0 },
 
     { ngx_string("nginx_version"), NULL, ngx_http_variable_nginx_version,
-      0, 0, 0 },
-
-    { ngx_string("nginx_full_version"), NULL, ngx_http_variable_nginx_full_version,
       0, 0, 0 },
 
     { ngx_string("hostname"), NULL, ngx_http_variable_hostname,
@@ -2241,20 +2236,6 @@ ngx_http_variable_nginx_version(ngx_http_request_t *r,
     v->no_cacheable = 0;
     v->not_found = 0;
     v->data = (u_char *) NGINX_VERSION;
-
-    return NGX_OK;
-}
-
-
-static ngx_int_t
-ngx_http_variable_nginx_full_version(ngx_http_request_t *r,
-    ngx_http_variable_value_t *v, uintptr_t data)
-{
-    v->len = sizeof(NGINX_SERVER_FULL) - 1;
-    v->valid = 1;
-    v->no_cacheable = 0;
-    v->not_found = 0;
-    v->data = (u_char *) NGINX_SERVER_FULL;
 
     return NGX_OK;
 }
