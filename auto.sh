@@ -1,7 +1,12 @@
 #!/bin/sh
 
 ### Read config
-. ./config.inc
+if [ ! -f "config.inc" ]; then
+    echo "--- The configuration file (config.inc) could not be found. Apply as default setting. ---"
+    echo "--- All additional modules are not used. ---"
+else
+    . ./config.inc
+fi
 
 ### If the value is incorrect, convert to normal data.
 if [ ! "$SERVER_HEADER" ]; then SERVER_HEADER="hakase"; fi
