@@ -12,6 +12,7 @@
 #include <ngx_core.h>
 #include <ngx_http.h>
 
+
 #define NGX_HTTP_V2_ALPN_ADVERTISE       "\x02h2"
 #define NGX_HTTP_V2_NPN_ADVERTISE        NGX_HTTP_V2_ALPN_ADVERTISE
 
@@ -59,11 +60,12 @@
 #define NGX_HTTP_V2_DEFAULT_HPACK_TABLE_SIZE     4096
 #define NGX_HTTP_V2_MAX_HPACK_TABLE_SIZE         16384 /* < 64k */
 
+#define NGX_HTTP_V2_DEFAULT_WEIGHT       16
+
+
 typedef struct ngx_http_v2_connection_s   ngx_http_v2_connection_t;
 typedef struct ngx_http_v2_node_s         ngx_http_v2_node_t;
 typedef struct ngx_http_v2_out_frame_s    ngx_http_v2_out_frame_t;
-
-#define NGX_HTTP_V2_DEFAULT_WEIGHT       16
 
 
 typedef u_char *(*ngx_http_v2_handler_pt) (ngx_http_v2_connection_t *h2c,
@@ -250,6 +252,8 @@ struct ngx_http_v2_stream_s {
     ngx_queue_t                      queue;
 
     ngx_array_t                     *cookies;
+
+    size_t                           header_limit;
 
     ngx_pool_t                      *pool;
 
@@ -462,10 +466,13 @@ size_t ngx_http_v2_huff_encode(u_char *src, size_t len, u_char *dst,
 u_char *ngx_http_v2_string_encode(u_char *dst, u_char *src, size_t len,
     u_char *tmp, ngx_uint_t lower);
 
-
-/* Not default source */
 u_char *
 ngx_http_v2_write_int(u_char *pos, ngx_uint_t prefix, ngx_uint_t value);
+
+#define ngx_http_v2_write_name(dst, src, len, tmp)                            \
+    ngx_http_v2_string_encode(dst, src, len, tmp, 1)
+#define ngx_http_v2_write_value(dst, src, len, tmp)                           \
+    ngx_http_v2_string_encode(dst, src, len, tmp, 0)
 
 u_char *
 ngx_http_v2_write_header(ngx_http_v2_connection_t *h2c, u_char *pos,
@@ -482,6 +489,5 @@ ngx_http_v2_table_resize(ngx_http_v2_connection_t *h2c);
 #define ngx_http_v2_write_header_tbl(key, val)                          \
     ngx_http_v2_write_header(h2c, pos, (u_char *) key, sizeof(key) - 1, \
     val.data, val.len, tmp);
-
 
 #endif /* _NGX_HTTP_V2_H_INCLUDED_ */

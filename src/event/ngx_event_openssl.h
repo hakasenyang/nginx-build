@@ -55,17 +55,17 @@
 #define ngx_ssl_conn_t          SSL
 
 
+#if (OPENSSL_VERSION_NUMBER < 0x10002000L)
+#define SSL_is_server(s)        (s)->server
+#endif
+
+
 typedef struct {
     ngx_msec_t                  timeout;
     ngx_uint_t                  threshold;
     size_t                      size_lo;
     size_t                      size_hi;
 } ngx_ssl_dyn_rec_t;
-
-
-#if (OPENSSL_VERSION_NUMBER < 0x10002000L)
-#define SSL_is_server(s)        (s)->server
-#endif
 
 
 struct ngx_ssl_s {

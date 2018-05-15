@@ -10,6 +10,10 @@
 #include <ngx_http.h>
 
 
+u_char *ngx_http_v2_write_int(u_char *pos, ngx_uint_t prefix,
+    ngx_uint_t value);
+
+
 u_char *
 ngx_http_v2_string_encode(u_char *dst, u_char *src, size_t len, u_char *tmp,
     ngx_uint_t lower)

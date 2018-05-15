@@ -227,7 +227,6 @@ if [ $HTTP = YES ]; then
         . auto/module
     fi
 
-
     if :; then
         ngx_module_name=ngx_http_range_header_filter_module
         ngx_module_incs=

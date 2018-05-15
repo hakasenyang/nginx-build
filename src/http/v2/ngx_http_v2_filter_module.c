@@ -23,6 +23,38 @@
 #define ngx_http_v2_literal_size(h)                                           \
     (ngx_http_v2_integer_octets(sizeof(h) - 1) + sizeof(h) - 1)
 
+#define ngx_http_v2_indexed(i)      (128 + (i))
+#define ngx_http_v2_inc_indexed(i)  (64 + (i))
+
+#define NGX_HTTP_V2_ENCODE_RAW            0
+#define NGX_HTTP_V2_ENCODE_HUFF           0x80
+
+#define NGX_HTTP_V2_AUTHORITY_INDEX       1
+#define NGX_HTTP_V2_METHOD_GET_INDEX      2
+#define NGX_HTTP_V2_PATH_INDEX            4
+
+#define NGX_HTTP_V2_SCHEME_HTTP_INDEX     6
+#define NGX_HTTP_V2_SCHEME_HTTPS_INDEX    7
+
+#define NGX_HTTP_V2_STATUS_INDEX          8
+#define NGX_HTTP_V2_STATUS_200_INDEX      8
+#define NGX_HTTP_V2_STATUS_204_INDEX      9
+#define NGX_HTTP_V2_STATUS_206_INDEX      10
+#define NGX_HTTP_V2_STATUS_304_INDEX      11
+#define NGX_HTTP_V2_STATUS_400_INDEX      12
+#define NGX_HTTP_V2_STATUS_404_INDEX      13
+#define NGX_HTTP_V2_STATUS_500_INDEX      14
+
+#define NGX_HTTP_V2_ACCEPT_ENCODING_INDEX 16
+#define NGX_HTTP_V2_ACCEPT_LANGUAGE_INDEX 17
+#define NGX_HTTP_V2_CONTENT_LENGTH_INDEX  28
+#define NGX_HTTP_V2_CONTENT_TYPE_INDEX    31
+#define NGX_HTTP_V2_DATE_INDEX            33
+#define NGX_HTTP_V2_LAST_MODIFIED_INDEX   44
+#define NGX_HTTP_V2_LOCATION_INDEX        46
+#define NGX_HTTP_V2_SERVER_INDEX          54
+#define NGX_HTTP_V2_USER_AGENT_INDEX      58
+#define NGX_HTTP_V2_VARY_INDEX            59
 
 #define NGX_HTTP_V2_NO_TRAILERS           (ngx_http_v2_out_frame_t *) -1
 
@@ -148,16 +180,10 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
     ngx_http_core_srv_conf_t  *cscf;
     u_char                     addr[NGX_SOCKADDR_STRLEN];
 
-    //static const u_char nginx[5] = "\x84\xaa\x63\x55\xe7";
 #if (NGX_HTTP_GZIP)
     static const u_char accept_encoding[12] =
         "\x8b\x84\x84\x2d\x69\x5b\x05\x44\x3c\x86\xaa\x6f";
 #endif
-
-    static size_t nginx_ver_len = ngx_http_v2_literal_size(NGINX_SERVER_FULL);
-
-    static size_t nginx_ver_build_len =
-                                  ngx_http_v2_literal_size(NGINX_SERVER_FULL_BUILD);
 
     stream = r->stream;
 
@@ -257,16 +283,15 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
 
     clcf = ngx_http_get_module_loc_conf(r, ngx_http_core_module);
 
-    if (r->headers_out.server == NULL && r->headers_out.status != NGX_HTTP_NO_CONTENT) {
+    if (r->headers_out.server == NULL) {
 
         if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_ON) {
-            len += 1 + nginx_ver_len;
+            len += 1 + ngx_http_v2_literal_size(NGINX_SERVER_FULL);
 
         } else if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_BUILD) {
-            len += 1 + nginx_ver_build_len;
+            len += 1 + ngx_http_v2_literal_size(NGINX_SERVER_FULL_BUILD);
 
         } else {
-            //len += 1 + sizeof(NGINX_SERVER);
             len += 1 + ngx_http_v2_literal_size(NGINX_SERVER);
         }
     }
@@ -467,7 +492,7 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
                                        sizeof(":status") - 1, pos + 8, 3, tmp);
     }
 
-    if (r->headers_out.server == NULL && r->headers_out.status != NGX_HTTP_NO_CONTENT) {
+    if (r->headers_out.server == NULL) {
 
         if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_ON) {
             pos = ngx_http_v2_write_header_str("server", NGINX_SERVER_FULL);
@@ -485,8 +510,6 @@ ngx_http_v2_header_filter(ngx_http_request_t *r)
     }
 
     if (r->headers_out.content_type.len) {
-        //*pos++ = ngx_http_v2_inc_indexed(NGX_HTTP_V2_CONTENT_TYPE_INDEX);
-
         if (r->headers_out.content_type_len == r->headers_out.content_type.len
             && r->headers_out.charset.len)
         {
@@ -609,7 +632,7 @@ ngx_http_v2_push_resources(ngx_http_request_t *r)
     ngx_http_complex_value_t   *pushes;
     ngx_str_t                   binary[NGX_HTTP_V2_PUSH_HEADERS];
 
-    ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, 
+    ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "http2 push resources");
 
     ngx_memzero(binary, NGX_HTTP_V2_PUSH_HEADERS * sizeof(ngx_str_t));
@@ -620,6 +643,7 @@ ngx_http_v2_push_resources(ngx_http_request_t *r)
         pushes = h2lcf->pushes->elts;
 
         for (i = 0; i < h2lcf->pushes->nelts; i++) {
+
             if (ngx_http_complex_value(r, &pushes[i], &path) != NGX_OK) {
                 return NGX_ERROR;
             }

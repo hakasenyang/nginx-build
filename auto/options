@@ -117,6 +117,7 @@ MAIL_SMTP=YES
 
 STREAM=NO
 STREAM_SSL=NO
+STREAM_REALIP=NO
 STREAM_LIMIT_CONN=YES
 STREAM_ACCESS=YES
 STREAM_GEO=YES
@@ -127,6 +128,7 @@ STREAM_RETURN=YES
 STREAM_UPSTREAM_HASH=YES
 STREAM_UPSTREAM_LEAST_CONN=YES
 STREAM_UPSTREAM_ZONE=YES
+STREAM_SSL_PREREAD=NO
 
 DYNAMIC_MODULES=
 
@@ -316,6 +318,7 @@ use the \"--with-mail_ssl_module\" option instead"
         --without-stream_limit_conn_module)
                                          STREAM_LIMIT_CONN=NO       ;;
         --without-stream_access_module)  STREAM_ACCESS=NO           ;;
+        --without-stream_geo_module)     STREAM_GEO=NO              ;;
         --without-stream_map_module)     STREAM_MAP=NO              ;;
         --without-stream_split_clients_module)
                                          STREAM_SPLIT_CLIENTS=NO    ;;
@@ -526,6 +529,7 @@ cat << END
   --with-stream_ssl_preread_module   enable ngx_stream_ssl_preread_module
   --without-stream_limit_conn_module disable ngx_stream_limit_conn_module
   --without-stream_access_module     disable ngx_stream_access_module
+  --without-stream_geo_module        disable ngx_stream_geo_module
   --without-stream_map_module        disable ngx_stream_map_module
   --without-stream_split_clients_module
                                      disable ngx_stream_split_clients_module
