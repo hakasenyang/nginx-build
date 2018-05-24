@@ -90,7 +90,7 @@ if [ "$FANCYINDEX" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./li
 auto/configure \
 --with-cc-opt="-DTCP_FASTOPEN=23 ${BUILD_BIT}-flto -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS" \
 --with-ld-opt="${BUILD_LD}" \
---with-openssl-opt="enable-tls13downgrade ${BUILD_OPENSSL}enable-weak-ssl-ciphers no-ssl3-method -DCFLAGS='-O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf' -LDFLAGS='${BUILD_LD} -Wl,-flto'" \
+--with-openssl-opt="enable-tls13downgrade ${BUILD_OPENSSL}enable-weak-ssl-cipheres no-ssl3-method -march=native -ljemalloc -Wl,-flto" \
 --builddir=objs --prefix=${NGX_PREFIX} \
 --conf-path=${NGX_CONF} \
 --pid-path=${NGX_PID} \
