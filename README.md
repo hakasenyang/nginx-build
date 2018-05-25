@@ -20,11 +20,11 @@
 ## Features
 - Auto SSL Cipher settings
     - **The following information is preset. Do not set it yourself unless you need it.**
-    - ssl_protocols
-    - ssl_ciphers
-    - ssl_prefer_server_ciphers
-    - ssl_ecdh_curve
-    - DO NOT USE ssl_dhparam. not required.
+    - ssl_protocols : TLSv1.2 TLSv1.3
+    - ssl_ciphers : [EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA
+    - ssl_prefer_server_ciphers : on
+    - ssl_ecdh_curve : X25519:P-256:P-384
+    - DO NOT USE **ssl_dhparam**. not required.
 - TLS v1.3 (draft 23, 28)
     - Use OpenSSL-1.1.1-pre7-dev (**draft 23, 28**)
     - Use OpenSSL Equal Preference Patch ([BoringSSL](https://github.com/google/boringssl) & [CentminMod](https://centminmod.com/))
