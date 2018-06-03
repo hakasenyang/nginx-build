@@ -490,4 +490,8 @@ ngx_http_v2_table_resize(ngx_http_v2_connection_t *h2c);
     ngx_http_v2_write_header(h2c, pos, (u_char *) key, sizeof(key) - 1, \
     val.data, val.len, tmp);
 
+#define ngx_http_v2_write_header_pot(key, val)                          \
+    ngx_http_v2_write_header(h2c, pos, (u_char *) key, sizeof(key) - 1, \
+    val->data, val->len, tmp);
+
 #endif /* _NGX_HTTP_V2_H_INCLUDED_ */

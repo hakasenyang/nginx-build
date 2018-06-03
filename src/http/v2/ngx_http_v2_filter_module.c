@@ -955,6 +955,7 @@ ngx_http_v2_push_resource(ngx_http_request_t *r, ngx_str_t *path,
 
     for (i = 0; i < NGX_HTTP_V2_PUSH_HEADERS; i++) {
         len += binary[i].len;
+        len += sizeof(ph[i].name);
     }
 
     pos = ngx_pnalloc(r->pool, len);
@@ -964,12 +965,17 @@ ngx_http_v2_push_resource(ngx_http_request_t *r, ngx_str_t *path,
 
     start = pos;
 
-    if (h2c->table_update) {
-        ngx_log_debug0(NGX_LOG_DEBUG_HTTP, fc->log, 0,
-                       "http2 table size update: 0");
-        *pos++ = (1 << 5) | 0;
-        h2c->table_update = 0;
-    }
+    h2c = r->stream->connection;
+
+    if (h2c->indicate_resize) {
+        *pos = 32;
+        pos = ngx_http_v2_write_int(pos, ngx_http_v2_prefix(5),
+                                    h2c->max_hpack_table_size);
+        h2c->indicate_resize = 0;
+#if (NGX_HTTP_V2_HPACK_ENC)
+        ngx_http_v2_table_resize(h2c);
+#endif
+     }
 
     ngx_log_debug0(NGX_LOG_DEBUG_HTTP, fc->log, 0,
                    "http2 push header: \":method: GET\"");
@@ -979,8 +985,7 @@ ngx_http_v2_push_resource(ngx_http_request_t *r, ngx_str_t *path,
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, fc->log, 0,
                    "http2 push header: \":path: %V\"", path);
 
-    *pos++ = ngx_http_v2_inc_indexed(NGX_HTTP_V2_PATH_INDEX);
-    pos = ngx_http_v2_write_value(pos, path->data, path->len, tmp);
+    pos = ngx_http_v2_write_header_pot(":path", path);
 
 #if (NGX_HTTP_SSL)
     if (fc->ssl) {
@@ -1003,11 +1008,26 @@ ngx_http_v2_push_resource(ngx_http_request_t *r, ngx_str_t *path,
             continue;
         }
 
+        value = &(*h)->value;
+
         ngx_log_debug2(NGX_LOG_DEBUG_HTTP, fc->log, 0,
                        "http2 push header: \"%V: %V\"",
                        &ph[i].name, &(*h)->value);
 
-        pos = ngx_cpymem(pos, binary[i].data, binary[i].len);
+        switch(i) {
+            case 0:
+                pos = ngx_http_v2_write_header_pot(":authority", value);
+                break;
+            case 1:
+                pos = ngx_http_v2_write_header_pot("accept-encoding", value);
+                break;
+            case 2:
+                pos = ngx_http_v2_write_header_pot("accept-language", value);
+                break;
+            case 3:
+                pos = ngx_http_v2_write_header_pot("user-agent", value);
+                break;
+        }
     }
 
     frame = ngx_http_v2_create_push_frame(r, start, pos);
