@@ -59,6 +59,17 @@
 #define NGX_HTTP_V2_NO_TRAILERS           (ngx_http_v2_out_frame_t *) -1
 
 
+static const struct {
+    u_char        *name;
+    u_char const   len;
+} push_header[] = {
+    { (u_char*)":authority"     , 10 },
+    { (u_char*)"accept-encoding" , 15 },
+    { (u_char*)"accept-language" , 15 },
+    { (u_char*)"user-agent"      , 10 }
+};
+
+
 typedef struct {
     ngx_str_t      name;
     u_char         index;
@@ -955,7 +966,7 @@ ngx_http_v2_push_resource(ngx_http_request_t *r, ngx_str_t *path,
 
     for (i = 0; i < NGX_HTTP_V2_PUSH_HEADERS; i++) {
         len += binary[i].len;
-        len += sizeof(ph[i].name);
+        len += push_header[i].len + 1;
     }
 
     pos = ngx_pnalloc(r->pool, len);
@@ -1014,20 +1025,9 @@ ngx_http_v2_push_resource(ngx_http_request_t *r, ngx_str_t *path,
                        "http2 push header: \"%V: %V\"",
                        &ph[i].name, &(*h)->value);
 
-        switch(i) {
-            case 0:
-                pos = ngx_http_v2_write_header_pot(":authority", value);
-                break;
-            case 1:
-                pos = ngx_http_v2_write_header_pot("accept-encoding", value);
-                break;
-            case 2:
-                pos = ngx_http_v2_write_header_pot("accept-language", value);
-                break;
-            case 3:
-                pos = ngx_http_v2_write_header_pot("user-agent", value);
-                break;
-        }
+        pos = ngx_http_v2_write_header(h2c, pos,
+                  push_header[i].name, push_header[i].len, value->data, value->len,
+                  tmp);
     }
 
     frame = ngx_http_v2_create_push_frame(r, start, pos);
