@@ -10,6 +10,9 @@
 #include <ngx_event.h>
 
 
+static void ngx_close_accepted_udp_connection(ngx_connection_t *c);
+
+
 #if !(NGX_WIN32)
 
 struct ngx_udp_connection_s {
@@ -19,7 +22,6 @@ struct ngx_udp_connection_s {
 };
 
 
-static void ngx_close_accepted_udp_connection(ngx_connection_t *c);
 static ssize_t ngx_udp_shared_recv(ngx_connection_t *c, u_char *buf,
     size_t size);
 static ngx_int_t ngx_insert_udp_connection(ngx_connection_t *c);
@@ -417,23 +419,6 @@ ngx_event_recvmsg(ngx_event_t *ev)
 }
 
 
-static void
-ngx_close_accepted_udp_connection(ngx_connection_t *c)
-{
-    ngx_free_connection(c);
-
-    c->fd = (ngx_socket_t) -1;
-
-    if (c->pool) {
-        ngx_destroy_pool(c->pool);
-    }
-
-#if (NGX_STAT_STUB)
-    (void) ngx_atomic_fetch_add(ngx_stat_active, -1);
-#endif
-}
-
-
 static ssize_t
 ngx_udp_shared_recv(ngx_connection_t *c, u_char *buf, size_t size)
 {
@@ -722,13 +707,13 @@ void ngx_event_recvmsg(ngx_event_t *ev)
 
         c->pool = ngx_create_pool(ls->pool_size, ev->log);
         if (c->pool == NULL) {
-            ngx_close_accepted_connection(c);
+            ngx_close_accepted_udp_connection(c);
             return;
         }
 
         c->sockaddr = ngx_palloc(c->pool, c->socklen);
         if (c->sockaddr == NULL) {
-            ngx_close_accepted_connection(c);
+            ngx_close_accepted_udp_connection(c);
             return;
         }
 
@@ -736,7 +721,7 @@ void ngx_event_recvmsg(ngx_event_t *ev)
 
         log = ngx_palloc(c->pool, sizeof(ngx_log_t));
         if (log == NULL) {
-            ngx_close_accepted_connection(c);
+            ngx_close_accepted_udp_connection(c);
             return;
         }
 
@@ -754,7 +739,7 @@ void ngx_event_recvmsg(ngx_event_t *ev)
         n = bytes;
         c->buffer = ngx_create_temp_buf(c->pool, n);
         if (c->buffer == NULL) {
-            ngx_close_accepted_connection(c);
+            ngx_close_accepted_udp_connection(c);
             return;
         }
 
@@ -786,7 +771,7 @@ void ngx_event_recvmsg(ngx_event_t *ev)
         if (ls->addr_ntop) {
             c->addr_text.data = ngx_pnalloc(c->pool, ls->addr_text_max_len);
             if (c->addr_text.data == NULL) {
-                ngx_close_accepted_connection(c);
+                ngx_close_accepted_udp_connection(c);
                 return;
             }
 
@@ -794,7 +779,7 @@ void ngx_event_recvmsg(ngx_event_t *ev)
                                              c->addr_text.data,
                                              ls->addr_text_max_len, 0);
             if (c->addr_text.len == 0) {
-                ngx_close_accepted_connection(c);
+                ngx_close_accepted_udp_connection(c);
                 return;
             }
         }
@@ -830,3 +815,18 @@ void ngx_event_recvmsg(ngx_event_t *ev)
 
 #endif
 
+static void
+ngx_close_accepted_udp_connection(ngx_connection_t *c)
+{
+    ngx_free_connection(c);
+
+    c->fd = (ngx_socket_t) -1;
+
+    if (c->pool) {
+        ngx_destroy_pool(c->pool);
+    }
+
+#if (NGX_STAT_STUB)
+    (void) ngx_atomic_fetch_add(ngx_stat_active, -1);
+#endif
+}
