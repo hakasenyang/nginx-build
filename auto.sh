@@ -1,4 +1,4 @@
-7#!/bin/sh
+#!/bin/sh
 
 ### Read config
 if [ ! -f "config.inc" ]; then
