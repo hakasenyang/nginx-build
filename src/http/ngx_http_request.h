@@ -432,9 +432,6 @@ struct ngx_http_request_s {
     int                              *captures;
     u_char                           *captures_data;
 #endif
-#if (NGX_HTTP_SPDY)
-    ngx_http_spdy_stream_t           *spdy_stream;
-#endif
 
     size_t                            limit_rate;
     size_t                            limit_rate_after;

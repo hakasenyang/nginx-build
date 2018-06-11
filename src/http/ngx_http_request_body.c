@@ -84,12 +84,6 @@ ngx_http_read_client_request_body(ngx_http_request_t *r,
         goto done;
     }
 #endif
-#if (NGX_HTTP_SPDY)
-    if (r->spdy_stream) {
-        rc = ngx_http_spdy_read_request_body(r, post_handler);
-        goto done;
-    }
-#endif
 
     preread = r->header_in->last - r->header_in->pos;
 
@@ -527,12 +521,6 @@ ngx_http_discard_request_body(ngx_http_request_t *r)
 #if (NGX_HTTP_V2)
     if (r->stream) {
         r->stream->skip_data = 1;
-        return NGX_OK;
-    }
-#endif
-#if (NGX_HTTP_SPDY)
-    if (r->spdy_stream) {
-        r->spdy_stream->skip_data = 1;
         return NGX_OK;
     }
 #endif

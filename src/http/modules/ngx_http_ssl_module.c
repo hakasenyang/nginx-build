@@ -14,8 +14,8 @@ typedef ngx_int_t (*ngx_ssl_variable_handler_pt)(ngx_connection_t *c,
     ngx_pool_t *pool, ngx_str_t *s);
 
 
-#define NGX_DEFAULT_CIPHERS     "[TLS13+AESGCM+AES128|TLS13+AESGCM+AES256|TLS13+CHACHA20]:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES"
-#define NGX_DEFAULT_ECDH_CURVE  "X25519:P-256:P-384:P-224:P-521"
+#define NGX_DEFAULT_CIPHERS     "[TLS13+AESGCM+AES128|TLS13+AESGCM+AES256|TLS13+CHACHA20]:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA"
+#define NGX_DEFAULT_ECDH_CURVE  "X25519:P-256:P-384"
 
 #define NGX_HTTP_NPN_ADVERTISE  "\x08http/1.1"
 
@@ -392,10 +392,10 @@ ngx_http_ssl_alpn_select(ngx_ssl_conn_t *ssl_conn, const unsigned char **out,
 #if (NGX_DEBUG)
     unsigned int            i;
 #endif
-#if (NGX_HTTP_V2 || NGX_HTTP_SPDY)
+#if (NGX_HTTP_V2)
     ngx_http_connection_t  *hc;
 #endif
-#if (NGX_HTTP_V2 || NGX_HTTP_SPDY || NGX_DEBUG)
+#if (NGX_HTTP_V2 || NGX_DEBUG)
     ngx_connection_t       *c;
 
     c = ngx_ssl_get_connection(ssl_conn);
@@ -409,31 +409,13 @@ ngx_http_ssl_alpn_select(ngx_ssl_conn_t *ssl_conn, const unsigned char **out,
     }
 #endif
 
-#if (NGX_HTTP_V2 || NGX_HTTP_SPDY)
-    hc = c->data;
-#endif
-
-#if (NGX_HTTP_V2 && NGX_HTTP_SPDY)
-    if (hc->addr_conf->http2 && hc->addr_conf->spdy) {
-        srv = (unsigned char *) NGX_HTTP_V2_ALPN_ADVERTISE
-                                NGX_SPDY_NPN_ADVERTISE NGX_HTTP_NPN_ADVERTISE;
-        srvlen = sizeof(NGX_HTTP_V2_ALPN_ADVERTISE NGX_SPDY_NPN_ADVERTISE
-                        NGX_HTTP_NPN_ADVERTISE) - 1;
-
-    } else
-#endif
 #if (NGX_HTTP_V2)
+    hc = c->data;
+
     if (hc->addr_conf->http2) {
         srv =
            (unsigned char *) NGX_HTTP_V2_ALPN_ADVERTISE NGX_HTTP_NPN_ADVERTISE;
         srvlen = sizeof(NGX_HTTP_V2_ALPN_ADVERTISE NGX_HTTP_NPN_ADVERTISE) - 1;
-
-    } else
-#endif
-#if (NGX_HTTP_SPDY)
-    if (hc->addr_conf->spdy) {
-        srv = (unsigned char *) NGX_SPDY_NPN_ADVERTISE NGX_HTTP_NPN_ADVERTISE;
-        srvlen = sizeof(NGX_SPDY_NPN_ADVERTISE NGX_HTTP_NPN_ADVERTISE) - 1;
 
     } else
 #endif
@@ -464,32 +446,19 @@ static int
 ngx_http_ssl_npn_advertised(ngx_ssl_conn_t *ssl_conn,
     const unsigned char **out, unsigned int *outlen, void *arg)
 {
-#if (NGX_HTTP_V2 || NGX_HTTP_SPDY || NGX_DEBUG)
+#if (NGX_HTTP_V2 || NGX_DEBUG)
     ngx_connection_t  *c;
 
     c = ngx_ssl_get_connection(ssl_conn);
     ngx_log_debug0(NGX_LOG_DEBUG_HTTP, c->log, 0, "SSL NPN advertised");
 #endif
 
-#if (NGX_HTTP_V2 || NGX_HTTP_SPDY)
+#if (NGX_HTTP_V2)
     {
     ngx_http_connection_t  *hc;
 
     hc = c->data;
-#endif
 
-#if (NGX_HTTP_V2 && NGX_HTTP_SPDY)
-    if (hc->addr_conf->http2 && hc->addr_conf->spdy) {
-        *out = (unsigned char *) NGX_HTTP_V2_NPN_ADVERTISE
-                                 NGX_SPDY_NPN_ADVERTISE
-                                 NGX_HTTP_NPN_ADVERTISE;
-        *outlen = sizeof(NGX_HTTP_V2_NPN_ADVERTISE NGX_SPDY_NPN_ADVERTISE
-                         NGX_HTTP_NPN_ADVERTISE) - 1;
-
-        return SSL_TLSEXT_ERR_OK;
-    } else
-#endif
-#if (NGX_HTTP_V2)
     if (hc->addr_conf->http2) {
         *out =
             (unsigned char *) NGX_HTTP_V2_NPN_ADVERTISE NGX_HTTP_NPN_ADVERTISE;
@@ -497,17 +466,6 @@ ngx_http_ssl_npn_advertised(ngx_ssl_conn_t *ssl_conn,
 
         return SSL_TLSEXT_ERR_OK;
     }
-#endif
-#if (NGX_HTTP_SPDY)
-    else if (hc->addr_conf->spdy) {
-        *out = (unsigned char *) NGX_SPDY_NPN_ADVERTISE NGX_HTTP_NPN_ADVERTISE;
-        *outlen = sizeof(NGX_SPDY_NPN_ADVERTISE NGX_HTTP_NPN_ADVERTISE) - 1;
-
-        return SSL_TLSEXT_ERR_OK;
-    }
-#endif
-
-#if (NGX_HTTP_V2 || NGX_HTTP_SPDY)
     }
 #endif
 
@@ -677,8 +635,7 @@ ngx_http_ssl_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child)
                          prev->prefer_server_ciphers, 1);
 
     ngx_conf_merge_bitmask_value(conf->protocols, prev->protocols,
-                         (NGX_CONF_BITMASK_SET|NGX_SSL_TLSv1
-                          |NGX_SSL_TLSv1_1|NGX_SSL_TLSv1_2|NGX_SSL_TLSv1_3));
+                         (NGX_CONF_BITMASK_SET|NGX_SSL_TLSv1_2|NGX_SSL_TLSv1_3));
 
     ngx_conf_merge_size_value(conf->buffer_size, prev->buffer_size,
                          NGX_SSL_BUFSIZE);
