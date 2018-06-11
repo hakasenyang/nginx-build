@@ -177,12 +177,8 @@ ngx_http_spdy_header_filter(ngx_http_request_t *r)
 
     if (r->headers_out.server == NULL) {
         len += ngx_http_spdy_nv_nsize("server");
-        if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_ON)
-            len += ngx_http_spdy_nv_vsize(NGINX_SERVER_FULL);
-        else if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_BUILD)
-            len += ngx_http_spdy_nv_vsize(NGINX_SERVER_FULL_BUILD);
-        else
-            len += ngx_http_spdy_nv_vsize(NGINX_SERVER);
+        len += clcf->server_tokens ? ngx_http_spdy_nv_vsize(NGINX_VER)
+                                   : ngx_http_spdy_nv_vsize("nginx");
     }
 
     if (r->headers_out.date == NULL) {
@@ -332,13 +328,9 @@ ngx_http_spdy_header_filter(ngx_http_request_t *r)
 
     if (r->headers_out.server == NULL) {
         last = ngx_http_spdy_nv_write_name(last, "server");
-
-        if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_ON)
-            last = ngx_http_spdy_nv_write_val(last, NGINX_SERVER_FULL);
-        else if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_BUILD)
-            last = ngx_http_spdy_nv_write_val(last, NGINX_SERVER_FULL_BUILD);
-        else
-            last = ngx_http_spdy_nv_write_val(last, NGINX_SERVER);
+        last = clcf->server_tokens
+               ? ngx_http_spdy_nv_write_val(last, NGINX_VER)
+               : ngx_http_spdy_nv_write_val(last, "nginx");
 
         count++;
     }
