@@ -34,9 +34,12 @@
     - headers_more_nginx_module
     - Google PageSpeed for nginx
     - and the other.
-- SPDY, HPACK, SSL Dynamic TLS Records Support. (Thanks to cloudflare!)
+- HPACK, SSL Dynamic TLS Records Support. (Thanks to cloudflare!)
 
 ## Upcoming Features
 - Support TLS v1.3 (not draft)
 - Auto build (rpm, deb, etc.)
 - ETC.
+
+## Deprecated Features
+- SPDY (Not compatible this version.)
