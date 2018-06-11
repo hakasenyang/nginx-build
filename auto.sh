@@ -132,7 +132,6 @@ auto/configure \
 --with-http_ssl_module \
 --with-mail_ssl_module \
 --with-http_v2_module \
---with-http_spdy_module \
 --with-http_v2_hpack_enc \
 --with-stream_ssl_module \
 --with-stream_geoip_module \
