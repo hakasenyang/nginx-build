@@ -25,8 +25,8 @@
     - ssl_prefer_server_ciphers : On
     - ssl_ecdh_curve : X25519:P-256:P-384:P-224:P-521
     - DO NOT USE **ssl_dhparam**. Not required.
-- TLS v1.3 (draft 23, 28)
-    - Use OpenSSL-1.1.1-pre8-dev (**draft 23, 28**)
+- TLS v1.3 (draft 23, 26, 28)
+    - Use OpenSSL-1.1.1-pre8-dev (**draft 23, 26, 28**)
     - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [CentminMod](https://centminmod.com/))
     - My equal preference patch is [here](https://git.hakase.app/Hakase/openssl-patch/src/branch/master/openssl-equal-pre8_ciphers.patch)
 - Prefers ChaCha20 suites with clients that don't have AES-NI(AES hardware acceleration) (e.g., Android devices)
