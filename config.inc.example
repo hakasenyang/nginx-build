@@ -19,6 +19,10 @@ BITCHK=`getconf LONG_BIT`
 ### Do not modify it under normal circumstances.
 BUILD_MTS="-j$(expr $(nproc) \+ 1)"
 
+### LTO build
+### View : https://gcc.gnu.org/wiki/LinkTimeOptimization#Using_LTO
+LTO=1
+
 #########################
 ### Select add module ###
 #########################

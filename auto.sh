@@ -11,6 +11,7 @@ fi
 ### If the value is incorrect, convert to normal data.
 if [ ! "$SERVER_HEADER" ]; then SERVER_HEADER="hakase"; fi
 if [ "$BITCHK" != 32 ] && [ "$BITCHK" != 64 ]; then BITCHK=32; fi
+if [ ! "$LTO" ]; then LTO=0; fi
 if [ ! "$BUILD_MTS" ]; then BUILD_MTS="-j2"; fi
 if [ ! "$NGX_PREFIX" ]; then NGX_PREFIX="/usr/local/nginx"; fi
 if [ ! "$NGX_SBIN_PATH" ]; then NGX_SBIN_PATH="/usr/sbin/nginx"; fi
@@ -80,6 +81,15 @@ else
     BUILD_LD=""
 fi
 
+### LTO Build
+if [ "$LTO" = 1 ]; then
+    BUILD_LTO="-flto"
+    BUILD_OPENSSL_LTO="-Wl,-flto"
+else
+    BUILD_LTO=""
+    BUILD_OPENSSL_LTO=""
+fi
+
 ### Module check
 if [ "$PAGESPEED" = 1 ]; then BUILD_MODULES="--add-module=./lib/pagespeed ${PS_NGX_EXTRA_FLAGS}"; fi
 if [ "$RTMP" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/nginx-rtmp-module"; fi
@@ -88,9 +98,9 @@ if [ "$DAV_EXT" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/n
 if [ "$FANCYINDEX" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/ngx-fancyindex"; fi
 
 auto/configure \
---with-cc-opt="-DTCP_FASTOPEN=23 ${BUILD_BIT}-flto -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS" \
---with-ld-opt="${BUILD_LD} -flto" \
---with-openssl-opt="enable-tls13downgrade ${BUILD_OPENSSL}enable-weak-ssl-ciphers no-ssl3-method -march=native -ljemalloc -Wl,-flto" \
+--with-cc-opt="-DTCP_FASTOPEN=23 ${BUILD_BIT}${BUILD_LTO} -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS" \
+--with-ld-opt="${BUILD_LD} ${BUILD_LTO}" \
+--with-openssl-opt="enable-tls13downgrade ${BUILD_OPENSSL}enable-weak-ssl-ciphers no-ssl3-method -march=native -ljemalloc ${BUILD_OPENSSL_LTO}" \
 --builddir=objs --prefix=${NGX_PREFIX} \
 --conf-path=${NGX_CONF} \
 --pid-path=${NGX_PID} \
