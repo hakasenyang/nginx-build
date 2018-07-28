@@ -71,12 +71,10 @@ fi
 ### x86, x64 Check (Configuration)
 if [ "$BITCHK" = 64 ]; then
     BUILD_BIT="-m64 "
-    BUILD_OPENSSL="enable-ec_nistp_64_gcc_128 "
     BUILD_ZLIB="./lib/zlib"
     BUILD_LD="-lrt -ljemalloc -Wl,-z,relro -Wl,-z,now -fPIC"
 else
     BUILD_BIT=""
-    BUILD_OPENSSL=""
     BUILD_ZLIB="./lib/zlib_x86"
     BUILD_LD=""
 fi
@@ -100,7 +98,7 @@ if [ "$FANCYINDEX" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./li
 auto/configure \
 --with-cc-opt="-DTCP_FASTOPEN=23 ${BUILD_BIT}${BUILD_LTO} -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS" \
 --with-ld-opt="${BUILD_LD} ${BUILD_LTO}" \
---with-openssl-opt="enable-tls13downgrade ${BUILD_OPENSSL}enable-weak-ssl-ciphers no-ssl3-method -march=native -ljemalloc ${BUILD_OPENSSL_LTO}" \
+--with-openssl-opt="enable-tls13downgrade enable-weak-ssl-ciphers no-ssl3-method -march=native -ljemalloc ${BUILD_OPENSSL_LTO}" \
 --builddir=objs --prefix=${NGX_PREFIX} \
 --conf-path=${NGX_CONF} \
 --pid-path=${NGX_PID} \
