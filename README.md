@@ -25,10 +25,10 @@
     - ssl_prefer_server_ciphers : On
     - ssl_ecdh_curve : X25519:P-256:P-384:P-224:P-521
     - DO NOT USE **ssl_dhparam**. Not required.
-- TLS v1.3 (draft 23, 26, 28, final)
+- TLS v1.3 (draft 23, 26, 28, **final**)
     - Use OpenSSL-1.1.1-pre9-dev (**draft 23, 26, 28, final**)
     - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [CentminMod](https://centminmod.com/))
-    - My equal preference patch is [here](https://git.hakase.app/Hakase/openssl-patch/src/branch/master/openssl-equal-pre9_ciphers.patch)
+    - My OpenSSL patch is [here](https://git.hakase.app/Hakase/openssl-patch/src/branch/master/openssl-equal-pre9_ciphers.patch).
 - Prefers ChaCha20 suites with clients that don't have AES-NI(AES hardware acceleration) (e.g., Android devices)
 - More library!
     - headers_more_nginx_module
@@ -37,7 +37,6 @@
 - HPACK, SSL Dynamic TLS Records Support. (Thanks to cloudflare!)
 
 ## Upcoming Features
-- Support TLS v1.3 (not draft)
 - Auto build (rpm, deb, etc.)
 - ETC.
 
