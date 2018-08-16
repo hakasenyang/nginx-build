@@ -30,10 +30,10 @@ LTO=1
 ### Enter 0 for the module that is not to be used.
 
 ### PageSpeed
-PAGESPEED=1
+PAGESPEED=0
 
 ### nginx-rtmp-module
-RTMP=1
+RTMP=0
 
 ### naxsi
 NAXSI=1
@@ -68,3 +68,4 @@ NGX_PID="/var/run/nginx.pid"
 
 ### Lock file
 NGX_LOCK="/var/lock/nginx.lock"
+
