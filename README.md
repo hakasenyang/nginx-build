@@ -28,7 +28,7 @@
 - TLS v1.3 (draft 23, 26, 28, **final**)
     - Use OpenSSL-1.1.2-dev (**draft 23, 26, 28, final**)
     - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [CentminMod](https://centminmod.com/))
-    - My OpenSSL patch is [here](https://git.hakase.app/Hakase/openssl-patch/src/branch/master/openssl-equal-pre9_ciphers.patch).
+    - My OpenSSL patch is [here](https://git.hakase.app/Hakase/openssl-patch).
 - Prefers ChaCha20 suites with clients that don't have AES-NI(AES hardware acceleration) (e.g., Android devices)
 - More library!
     - headers_more_nginx_module
