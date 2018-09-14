@@ -2,20 +2,21 @@
 **My nginx build files.**
 
 ## Please install dependency library.
-- CentOS / Red Hat : yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel geoip-devel gcc-c++ curl
-- Ubuntu / Debian - apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool libgd-dev libgeoip-dev g++ curl
+- CentOS / Red Hat - `yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel geoip-devel gcc-c++ curl`
+- Ubuntu / Debian - `apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool libgd-dev libgeoip-dev g++ curl`
 
 ## How to Install?
-1. Install dependency library. (If you have already install it, omit it.)
-2. Edit for config.inc file. (SERVER_HEADER, Modules, ETC.)
+1. Clone this repository - `git clone https://github.com/hakasenyang/nginx-build.git --recursive`
+2. Install dependency library. (If you have already install it, omit it.)
+3. Edit for config.inc file. (SERVER_HEADER, Modules, ETC.)
     - If you receive the source for the first time, type the following command to set it.
     - Then modify config.inc.
-    - cp config.inc.example config.inc
-3. Run ./auto.sh
-4. Install [systemd file](https://www.nginx.com/resources/wiki/start/topics/examples/systemd/) (If you have already install it, omit it.)
-5. Check version and error test : **nginx -v; nginx -t;**
-5. systemctl restart nginx
-6. **The END!!**
+    - `cp config.inc.example config.inc`
+4. Run `sudo ./auto.sh`
+5. Install [systemd file](https://www.nginx.com/resources/wiki/start/topics/examples/systemd/) (If you have already install it, omit it.)
+6. Check version and error test : `nginx -v; nginx -t;`
+7. Run `systemctl restart nginx`
+8. **The END!!**
 
 ## Features
 - Auto SSL Cipher settings
