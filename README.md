@@ -31,7 +31,7 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 - TLS v1.3 (draft 23, 26, 28, **final**)
     - Use OpenSSL-1.1.2-dev (**draft 23, 26, 28, final**)
     - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [buik](https://gitlab.com/buik/openssl/blob/openssl-patch/openssl-1.1))
-    - My OpenSSL patch is [here](https://git.hakase.app/Hakase/openssl-patch).
+    - My OpenSSL patch is [here](https://github.com/hakasenyang/openssl-patch).
 - Prefers ChaCha20 suites with clients that don't have AES-NI(AES hardware acceleration) (e.g., Android devices)
 - More library!
     - headers_more_nginx_module
