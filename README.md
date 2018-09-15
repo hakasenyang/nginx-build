@@ -38,6 +38,7 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - Google PageSpeed for nginx
     - and the other.
 - HPACK, SSL Dynamic TLS Records Support. (Thanks to cloudflare!)
+- SSL Strict-SNI (ex: http { strict_sni on; } )
 
 ## Upcoming Features
 - Auto build (rpm, deb, etc.)
