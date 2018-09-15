@@ -40,7 +40,7 @@ index 8422161dc1..675446e59f 100644
 -        SSLfatal(s, altmp, SSL_F_FINAL_SERVER_NAME, SSL_R_CALLBACK_FAILED);
 +        s->statem.in_init = 1;
 +        s->statem.state = MSG_FLOW_ERROR;
-+        ssl3_send_alert(s, SSL3_AL_FATAL, altmp);
++        ssl3_send_alert(s, SSL3_AL_FATAL, SSL_F_FINAL_RENEGOTIATE);
          return 0;
 
      case SSL_TLSEXT_ERR_ALERT_WARNING:
