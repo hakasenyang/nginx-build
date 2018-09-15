@@ -1,6 +1,8 @@
 # Hakase-nginx
 **My nginx build files.**
 
+Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
+
 ## Please install dependency library.
 - CentOS / Red Hat - `yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel geoip-devel gcc-c++ curl`
 - Ubuntu / Debian - `apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool libgd-dev libgeoip-dev g++ curl`
@@ -28,7 +30,7 @@
     - DO NOT USE **ssl_dhparam**. Not required.
 - TLS v1.3 (draft 23, 26, 28, **final**)
     - Use OpenSSL-1.1.2-dev (**draft 23, 26, 28, final**)
-    - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [CentminMod](https://centminmod.com/))
+    - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [buik](https://gitlab.com/buik/openssl/blob/openssl-patch/openssl-1.1))
     - My OpenSSL patch is [here](https://git.hakase.app/Hakase/openssl-patch).
 - Prefers ChaCha20 suites with clients that don't have AES-NI(AES hardware acceleration) (e.g., Android devices)
 - More library!
