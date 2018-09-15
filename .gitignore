@@ -2,7 +2,6 @@
 *~
 *.orig
 *.rej
-*.patch
 
 # Build files
 /objs
