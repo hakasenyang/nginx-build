@@ -846,13 +846,17 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
     ngx_http_core_loc_conf_t  *clcf;
     ngx_http_core_srv_conf_t  *cscf;
 
+    c = ngx_ssl_get_connection(ssl_conn);
+
+    hc = c->data;
+
+    clcf = ngx_http_get_module_loc_conf(hc->conf_ctx, ngx_http_core_module);
+
     servername = SSL_get_servername(ssl_conn, TLSEXT_NAMETYPE_host_name);
 
     if (servername == NULL) {
-        return SSL_TLSEXT_ERR_NOACK;
+        return (clcf->strict_sni) ? SSL_TLSEXT_ERR_ALERT_FATAL : SSL_TLSEXT_ERR_NOACK;
     }
-
-    c = ngx_ssl_get_connection(ssl_conn);
 
     if (c->ssl->renegotiation) {
         return SSL_TLSEXT_ERR_NOACK;
@@ -864,7 +868,7 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
     host.len = ngx_strlen(servername);
 
     if (host.len == 0) {
-        return SSL_TLSEXT_ERR_NOACK;
+        return (clcf->strict_sni) ? SSL_TLSEXT_ERR_ALERT_FATAL : SSL_TLSEXT_ERR_NOACK;
     }
 
     host.data = (u_char *) servername;
@@ -873,13 +877,11 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
         return SSL_TLSEXT_ERR_NOACK;
     }
 
-    hc = c->data;
-
     if (ngx_http_find_virtual_server(c, hc->addr_conf->virtual_names, &host,
                                      NULL, &cscf)
         != NGX_OK)
     {
-        return SSL_TLSEXT_ERR_NOACK;
+        return (clcf->strict_sni) ? SSL_TLSEXT_ERR_ALERT_FATAL : SSL_TLSEXT_ERR_NOACK;
     }
 
     hc->ssl_servername = ngx_palloc(c->pool, sizeof(ngx_str_t));
@@ -890,8 +892,6 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
     *hc->ssl_servername = host;
 
     hc->conf_ctx = cscf->ctx;
-
-    clcf = ngx_http_get_module_loc_conf(hc->conf_ctx, ngx_http_core_module);
 
     ngx_set_connection_log(c, clcf->error_log);
 
