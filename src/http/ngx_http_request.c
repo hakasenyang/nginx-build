@@ -932,14 +932,17 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
 static void
 ngx_http_process_request_line(ngx_event_t *rev)
 {
-    ssize_t              n;
-    ngx_int_t            rc, rv;
-    ngx_str_t            host;
-    ngx_connection_t    *c;
-    ngx_http_request_t  *r;
+    ssize_t                    n;
+    ngx_int_t                  rc, rv;
+    ngx_str_t                  host;
+    ngx_connection_t          *c;
+    ngx_http_core_loc_conf_t  *clcf;
+    ngx_http_request_t        *r;
 
     c = rev->data;
     r = c->data;
+
+    clcf = ngx_http_get_module_loc_conf(r, ngx_http_core_module);
 
     ngx_log_debug0(NGX_LOG_DEBUG_HTTP, rev->log, 0,
                    "http process request line");
@@ -1056,10 +1059,10 @@ ngx_http_process_request_line(ngx_event_t *rev)
                           ngx_http_client_errors[rc - NGX_HTTP_CLIENT_ERROR]);
 
             if (rc == NGX_HTTP_PARSE_INVALID_VERSION) {
-                (r->http_connection->ssl) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_VERSION_NOT_SUPPORTED);
+                (r->http_connection->ssl && clcf->strict_sni) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_VERSION_NOT_SUPPORTED);
 
             } else {
-                (r->http_connection->ssl) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
+                (r->http_connection->ssl && clcf->strict_sni) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
             }
 
             return;
@@ -1800,6 +1803,9 @@ ngx_http_process_multi_header_lines(ngx_http_request_t *r, ngx_table_elt_t *h,
 ngx_int_t
 ngx_http_process_request_header(ngx_http_request_t *r)
 {
+    ngx_http_core_loc_conf_t  *clcf;
+    clcf = ngx_http_get_module_loc_conf(r, ngx_http_core_module);
+
     if (r->headers_in.server.len == 0
         && ngx_http_set_virtual_server(r, &r->headers_in.server)
            == NGX_ERROR)
@@ -1810,7 +1816,7 @@ ngx_http_process_request_header(ngx_http_request_t *r)
     if (r->headers_in.host == NULL && r->http_version > NGX_HTTP_VERSION_10) {
         ngx_log_error(NGX_LOG_INFO, r->connection->log, 0,
                    "client sent HTTP/1.1 request without \"Host\" header");
-        (r->http_connection->ssl) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
+        (r->http_connection->ssl && clcf->strict_sni) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
         return NGX_ERROR;
     }
 
