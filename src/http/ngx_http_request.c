@@ -1059,7 +1059,7 @@ ngx_http_process_request_line(ngx_event_t *rev)
                 ngx_http_finalize_request(r, NGX_HTTP_VERSION_NOT_SUPPORTED);
 
             } else {
-                ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
+                (r->http_connection->ssl) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
             }
 
             return;
