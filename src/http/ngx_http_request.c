@@ -1056,7 +1056,7 @@ ngx_http_process_request_line(ngx_event_t *rev)
                           ngx_http_client_errors[rc - NGX_HTTP_CLIENT_ERROR]);
 
             if (rc == NGX_HTTP_PARSE_INVALID_VERSION) {
-                ngx_http_finalize_request(r, NGX_HTTP_VERSION_NOT_SUPPORTED);
+                (r->http_connection->ssl) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_VERSION_NOT_SUPPORTED);
 
             } else {
                 (r->http_connection->ssl) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
