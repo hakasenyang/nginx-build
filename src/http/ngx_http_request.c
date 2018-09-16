@@ -1810,7 +1810,7 @@ ngx_http_process_request_header(ngx_http_request_t *r)
     if (r->headers_in.host == NULL && r->http_version > NGX_HTTP_VERSION_10) {
         ngx_log_error(NGX_LOG_INFO, r->connection->log, 0,
                    "client sent HTTP/1.1 request without \"Host\" header");
-        ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
+        (r->http_connection->ssl) ? ngx_http_terminate_request(r, 0) : ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
         return NGX_ERROR;
     }
 
@@ -1905,7 +1905,8 @@ ngx_http_process_request(ngx_http_request_t *r)
                 ngx_ssl_remove_cached_session(c->ssl->session_ctx,
                                        (SSL_get0_session(c->ssl->connection)));
 
-                ngx_http_finalize_request(r, NGX_HTTPS_CERT_ERROR);
+                //ngx_http_finalize_request(r, NGX_HTTPS_CERT_ERROR);
+                ngx_http_terminate_request(r, 0);
                 return;
             }
 
@@ -1919,7 +1920,8 @@ ngx_http_process_request(ngx_http_request_t *r)
                     ngx_ssl_remove_cached_session(c->ssl->session_ctx,
                                        (SSL_get0_session(c->ssl->connection)));
 
-                    ngx_http_finalize_request(r, NGX_HTTPS_NO_CERT);
+                    //ngx_http_finalize_request(r, NGX_HTTPS_NO_CERT);
+                    ngx_http_terminate_request(r, 0);
                     return;
                 }
 
