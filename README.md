@@ -39,6 +39,8 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - and the other.
 - HPACK, SSL Dynamic TLS Records Support. (Thanks to cloudflare!)
 - SSL Strict-SNI (ex: http { strict_sni on; } )
+    - Strict SNI requires at least two ssl server settings (server { listen 443 ssl }).
+    - It does not matter what kind of certificate or duplicate.
 
 ## Upcoming Features
 - Auto build (rpm, deb, etc.)
