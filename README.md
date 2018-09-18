@@ -38,7 +38,7 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - Google PageSpeed for nginx
     - and the other.
 - HPACK, SSL Dynamic TLS Records Support. (Thanks to cloudflare!)
-- SSL Strict-SNI (ex: http { strict_sni on; } )
+- SSL Strict-SNI (ex: http { strict_sni on; } ) (Thanks to [@JemmyLoveJenny](https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-421551872))
     - Strict SNI requires at least two ssl server settings (server { listen 443 ssl }).
     - It does not matter what kind of certificate or duplicate.
 
