@@ -41,6 +41,7 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 - SSL Strict-SNI (ex: http { strict_sni on; } ) (Thanks to [@JemmyLoveJenny](https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-421551872))
     - Strict SNI requires at least two ssl server settings (server { listen 443 ssl }).
     - It does not matter what kind of certificate or duplicate.
+    - Use "strict_sni_header on" if you do not want to respond to invalid headers. (only with strict_sni)
 
 ## Upcoming Features
 - Auto build (rpm, deb, etc.)
