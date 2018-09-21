@@ -37,12 +37,12 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - headers_more_nginx_module
     - Google PageSpeed for nginx
     - and the other.
-- HPACK, SSL Dynamic TLS Records Support. (Thanks to cloudflare!)
+- Support HPACK, SSL Dynamic TLS Records. (Thanks to cloudflare!)
 - SSL Strict-SNI (ex: http { strict_sni on; } ) (Thanks to [@JemmyLoveJenny](https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-421551872))
     - Strict SNI requires at least two ssl server settings (server { listen 443 ssl }).
     - It does not matter what kind of certificate or duplicate.
     - Use "strict_sni_header on" if you do not want to respond to invalid headers. (only with strict_sni)
-- GeoIP2 Module [#2](https://github.com/hakasenyang/nginx-build/issues/2)
+- GeoIP2 Module - [Issues #2](https://github.com/hakasenyang/nginx-build/issues/2)
     - [Check the following page](https://github.com/leev/ngx_http_geoip2_module) for GeoIP2 settings method.
 
 ## Upcoming Features
