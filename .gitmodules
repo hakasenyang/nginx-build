@@ -30,3 +30,6 @@
 	url = https://github.com/cloudflare/zlib.git
 	branch = gcc.amd64
 
+[submodule "lib/ngx_http_geoip2_module"]
+	path = lib/ngx_http_geoip2_module
+	url = https://github.com/leev/ngx_http_geoip2_module.git
