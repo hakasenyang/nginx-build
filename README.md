@@ -4,7 +4,7 @@
 Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 
 ## Please install dependency library.
-- CentOS / Red Hat - `yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel libmaxminddb-dev gcc-c++ curl`
+- CentOS / Red Hat - `yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel libmaxminddb-devel gcc-c++ curl`
 - Ubuntu / Debian - `apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool libgd-dev libmaxminddb-dev g++ curl`
 
 ## How to Install?
