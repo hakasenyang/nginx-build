@@ -94,6 +94,7 @@ if [ "$RTMP" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/ngin
 if [ "$NAXSI" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/naxsi/naxsi_src"; fi
 if [ "$DAV_EXT" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/nginx-dav-ext-module"; fi
 if [ "$FANCYINDEX" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/ngx-fancyindex"; fi
+if [ "$GEOIP2" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/ngx_http_geoip2_module"; fi
 
 auto/configure \
 --with-cc-opt="-DTCP_FASTOPEN=23 ${BUILD_BIT}${BUILD_LTO} -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS" \
@@ -122,7 +123,6 @@ auto/configure \
 --with-http_stub_status_module \
 --with-http_flv_module \
 --with-http_mp4_module \
---with-http_geoip_module \
 --with-http_gunzip_module \
 --with-http_slice_module \
 --with-http_gzip_static_module \
@@ -142,7 +142,6 @@ auto/configure \
 --with-http_v2_module \
 --with-http_v2_hpack_enc \
 --with-stream_ssl_module \
---with-stream_geoip_module \
 --with-stream_realip_module \
 --with-stream_ssl_preread_module \
 --add-module=./lib/ngx_devel_kit \

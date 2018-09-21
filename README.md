@@ -4,8 +4,8 @@
 Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 
 ## Please install dependency library.
-- CentOS / Red Hat - `yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel geoip-devel gcc-c++ curl`
-- Ubuntu / Debian - `apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool libgd-dev libgeoip-dev g++ curl`
+- CentOS / Red Hat - `yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel libmaxminddb-dev gcc-c++ curl`
+- Ubuntu / Debian - `apt install libjemalloc-dev uuid-dev libatomic1 libatomic-ops-dev expat unzip autoconf automake libtool libgd-dev libmaxminddb-dev g++ curl`
 
 ## How to Install?
 1. Clone this repository - `git clone https://github.com/hakasenyang/nginx-build.git --recursive`
@@ -42,6 +42,8 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - Strict SNI requires at least two ssl server settings (server { listen 443 ssl }).
     - It does not matter what kind of certificate or duplicate.
     - Use "strict_sni_header on" if you do not want to respond to invalid headers. (only with strict_sni)
+- GeoIP2 Module [#2](https://github.com/hakasenyang/nginx-build/issues/2)
+    - [Check the following page](https://github.com/leev/ngx_http_geoip2_module) for GeoIP2 settings method.
 
 ## Upcoming Features
 - Auto build (rpm, deb, etc.)
@@ -49,3 +51,4 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 
 ## Deprecated Features
 - SPDY (Not compatible this version.)
+- GeoIP (Changed to GeoIP2.)
