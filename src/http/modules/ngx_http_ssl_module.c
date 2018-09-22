@@ -641,12 +641,12 @@ ngx_http_ssl_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child)
     }
 
     ngx_conf_merge_value(conf->session_timeout,
-                         prev->session_timeout, 300);
+                         prev->session_timeout, 86400);
 
     ngx_conf_merge_value(conf->prefer_server_ciphers,
                          prev->prefer_server_ciphers, 1);
 
-    ngx_conf_merge_value(conf->early_data, prev->early_data, 0);
+    ngx_conf_merge_value(conf->early_data, prev->early_data, 1);
 
     ngx_conf_merge_bitmask_value(conf->protocols, prev->protocols,
                          (NGX_CONF_BITMASK_SET|NGX_SSL_TLSv1
