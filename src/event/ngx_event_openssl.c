@@ -1207,7 +1207,7 @@ ngx_ssl_early_data(ngx_conf_t *cf, ngx_ssl_t *ssl, ngx_uint_t enable)
 
     /* OpenSSL */
 
-    SSL_CTX_set_max_early_data(ssl->ctx, NGX_SSL_BUFSIZE);
+    SSL_CTX_set_max_early_data(ssl->ctx, 14336);
 
 #else
     ngx_log_error(NGX_LOG_WARN, ssl->log, 0,
