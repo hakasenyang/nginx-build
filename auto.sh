@@ -81,8 +81,8 @@ fi
 
 ### LTO Build
 if [ "$LTO" = 1 ]; then
-    BUILD_LTO="-flto"
-    BUILD_OPENSSL_LTO="-Wl,-flto"
+    BUILD_LTO="-flto -ffat-lto-objects"
+    BUILD_OPENSSL_LTO="-flto -ffat-lto-objects"
 else
     BUILD_LTO=""
     BUILD_OPENSSL_LTO=""
