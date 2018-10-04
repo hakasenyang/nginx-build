@@ -1460,6 +1460,14 @@ ngx_ssl_handshake(ngx_connection_t *c)
 
     c->read->error = 1;
 
+    // nginx strict sni patch.
+    // https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-427040319
+    if (sslerr == SSL_ERROR_SSL) {
+        ERR_peek_error();
+        ERR_clear_error();
+        return NGX_ERROR;
+    }
+
     ngx_ssl_connection_error(c, sslerr, err, "SSL_do_handshake() failed");
 
     return NGX_ERROR;
