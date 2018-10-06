@@ -33,6 +33,7 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [buik](https://gitlab.com/buik/openssl/blob/openssl-patch/openssl-1.1))
     - My OpenSSL patch is [here](https://github.com/hakasenyang/openssl-patch).
 - Prefers ChaCha20 suites with clients that don't have AES-NI(AES hardware acceleration) (e.g., Android devices)
+    - Support [CHACHA20-draft](https://github.com/JemmyLoveJenny/ngx_ossl_patches/blob/master/ossl_enable_chacha20-poly1305-draft.patch) by [@JemmyLoveJenny](https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-427554824).
 - More library!
     - headers_more_nginx_module
     - Google PageSpeed for nginx
