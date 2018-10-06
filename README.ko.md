@@ -32,6 +32,7 @@ example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - OpenSSL equal preference patch 사용 ([BoringSSL](https://github.com/google/boringssl) & [buik](https://gitlab.com/buik/openssl/blob/openssl-patch/openssl-1.1))
     - 제 OpenSSL Patch 파일은 [여기](https://github.com/hakasenyang/openssl-patch)에 있습니다.
 - AES-NI (AES 하드웨어 가속) 이 없는 환경에서는 CHACHA20 Cipher 가 우선으로 적용됩니다. (구 기기 안드로이드 등)
+    - [CHACHA20-draft](https://github.com/JemmyLoveJenny/ngx_ossl_patches/blob/master/ossl_enable_chacha20-poly1305-draft.patch) 를 지원합니다. 제작자 : [@JemmyLoveJenny](https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-427554824).
 - 여러 추가모듈들.
     - headers_more_nginx_module
     - Google PageSpeed for nginx
