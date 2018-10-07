@@ -2626,16 +2626,17 @@ ngx_ssl_connection_error(ngx_connection_t *c, int sslerr, ngx_err_t err,
     } else if (sslerr == SSL_ERROR_SSL) {
 
         n = ERR_GET_REASON(ERR_peek_error());
-        f = ERR_GET_FUNC(ERR_peek_error());
 
         /* Strict SNI Error Patch
          * https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-427040319
          */
-        if (n == SSL_R_CALLBACK_FAILED
-            && f == SSL_F_FINAL_SERVER_NAME) {
-            ERR_peek_error();
-            ERR_clear_error();
-            return;
+        if (n == SSL_R_CALLBACK_FAILED) {
+            f = ERR_GET_FUNC(ERR_peek_error());
+            if (f == SSL_F_FINAL_SERVER_NAME) {
+                ERR_peek_error();
+                ERR_clear_error();
+                return;
+            }
         }
 
             /* handshake failures */
