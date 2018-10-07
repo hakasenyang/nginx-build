@@ -1460,14 +1460,6 @@ ngx_ssl_handshake(ngx_connection_t *c)
 
     c->read->error = 1;
 
-    // nginx strict sni patch.
-    // https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-427040319
-    if (sslerr == SSL_ERROR_SSL) {
-        ERR_peek_error();
-        ERR_clear_error();
-        return NGX_ERROR;
-    }
-
     ngx_ssl_connection_error(c, sslerr, err, "SSL_do_handshake() failed");
 
     return NGX_ERROR;
@@ -1580,14 +1572,6 @@ ngx_ssl_try_early_data(ngx_connection_t *c)
     }
 
     c->read->error = 1;
-
-    // Fixed SSL_read_early_data error.
-    // https://github.com/hakasenyang/nginx-build/commit/e3932ebe24b3fc723d6cb041c52ae63876154df9#commitcomment-30796507
-    if (sslerr == SSL_ERROR_SSL) {
-        ERR_peek_error();
-        ERR_clear_error();
-        return NGX_ERROR;
-    }
 
     ngx_ssl_connection_error(c, sslerr, err, "SSL_read_early_data() failed");
 
@@ -2606,6 +2590,7 @@ ngx_ssl_connection_error(ngx_connection_t *c, int sslerr, ngx_err_t err,
     char *text)
 {
     int         n;
+    int         f;
     ngx_uint_t  level;
 
     level = NGX_LOG_CRIT;
@@ -2641,6 +2626,17 @@ ngx_ssl_connection_error(ngx_connection_t *c, int sslerr, ngx_err_t err,
     } else if (sslerr == SSL_ERROR_SSL) {
 
         n = ERR_GET_REASON(ERR_peek_error());
+        f = ERR_GET_FUNC(ERR_peek_error());
+
+        /* Strict SNI Error Patch
+         * https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-427040319
+         */
+        if (n == SSL_R_CALLBACK_FAILED
+            && f == SSL_F_FINAL_SERVER_NAME) {
+            ERR_peek_error();
+            ERR_clear_error();
+            return;
+        }
 
             /* handshake failures */
         if (n == SSL_R_BAD_CHANGE_CIPHER_SPEC                        /*  103 */
