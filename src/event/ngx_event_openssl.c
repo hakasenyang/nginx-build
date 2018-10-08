@@ -1460,14 +1460,6 @@ ngx_ssl_handshake(ngx_connection_t *c)
 
     c->read->error = 1;
 
-#if (!defined SSL_R_CALLBACK_FAILED || !defined SSL_F_FINAL_SERVER_NAME)
-    if (sslerr == SSL_ERROR_SSL) {
-        ERR_peek_error();
-        ERR_clear_error();
-        return NGX_ERROR;
-    }
-#endif
-
     ngx_ssl_connection_error(c, sslerr, err, "SSL_do_handshake() failed");
 
     return NGX_ERROR;
@@ -1580,14 +1572,6 @@ ngx_ssl_try_early_data(ngx_connection_t *c)
     }
 
     c->read->error = 1;
-
-#if (!defined SSL_R_CALLBACK_FAILED || !defined SSL_F_FINAL_SERVER_NAME)
-    if (sslerr == SSL_ERROR_SSL) {
-        ERR_peek_error();
-        ERR_clear_error();
-        return NGX_ERROR;
-    }
-#endif
 
     ngx_ssl_connection_error(c, sslerr, err, "SSL_read_early_data() failed");
 
@@ -2652,7 +2636,10 @@ ngx_ssl_connection_error(ngx_connection_t *c, int sslerr, ngx_err_t err,
         if (n == SSL_R_CALLBACK_FAILED) {
             f = ERR_GET_FUNC(ERR_peek_error());
             if (f == SSL_F_FINAL_SERVER_NAME) {
-                ERR_peek_error();
+                while (ERR_peek_error()) {
+                    ngx_log_debug0(NGX_LOG_DEBUG_EVENT, c->log, 0,
+                                   "ignoring ssl error at STRICT SNI block");
+                }
                 ERR_clear_error();
                 return;
             }
