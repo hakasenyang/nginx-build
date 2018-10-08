@@ -2637,8 +2637,8 @@ ngx_ssl_connection_error(ngx_connection_t *c, int sslerr, ngx_err_t err,
             f = ERR_GET_FUNC(ERR_peek_error());
             if (f == SSL_F_FINAL_SERVER_NAME) {
                 while (ERR_peek_error()) {
-                    ngx_log_debug0(NGX_LOG_DEBUG_EVENT, c->log, 0,
-                                   "ignoring ssl error at STRICT SNI block");
+                    ngx_ssl_error(NGX_LOG_DEBUG, c->log, 0,
+                                  "ignoring ssl error at STRICT SNI block");
                 }
                 ERR_clear_error();
                 return;
