@@ -2631,6 +2631,7 @@ ngx_ssl_connection_error(ngx_connection_t *c, int sslerr, ngx_err_t err,
 
         /* Strict SNI Error Patch
          * https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-427040319
+         * https://github.com/hakasenyang/openssl-patch/issues/7#issuecomment-427872934
          */
 #if (defined SSL_R_CALLBACK_FAILED && defined SSL_F_FINAL_SERVER_NAME)
         if (n == SSL_R_CALLBACK_FAILED) {
