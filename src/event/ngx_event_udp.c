@@ -25,7 +25,6 @@ struct ngx_udp_connection_s {
 static ssize_t ngx_udp_shared_recv(ngx_connection_t *c, u_char *buf,
     size_t size);
 static ngx_int_t ngx_insert_udp_connection(ngx_connection_t *c);
-static void ngx_delete_udp_connection(void *data);
 static ngx_connection_t *ngx_lookup_udp_connection(ngx_listening_t *ls,
     struct sockaddr *sockaddr, socklen_t socklen,
     struct sockaddr *local_sockaddr, socklen_t local_socklen);
@@ -263,7 +262,10 @@ ngx_event_recvmsg(ngx_event_t *ev)
 
             rev->handler(rev);
 
-            c->udp->buffer = NULL;
+            if (c->udp) {
+                c->udp->buffer = NULL;
+            }
+
             rev->ready = 0;
 
             goto next;
@@ -540,12 +542,18 @@ ngx_insert_udp_connection(ngx_connection_t *c)
 }
 
 
-static void
+void
 ngx_delete_udp_connection(void *data)
 {
     ngx_connection_t  *c = data;
 
+    if (c->udp == NULL) {
+        return;
+    }
+
     ngx_rbtree_delete(&c->listening->rbtree, &c->udp->node);
+
+    c->udp = NULL;
 }
 
 
@@ -572,6 +580,14 @@ ngx_lookup_udp_connection(ngx_listening_t *ls, struct sockaddr *sockaddr,
             return NULL;
         }
     }
+
+#else
+
+void
+ngx_delete_udp_connection(void *data)
+{
+    return;
+}
 
 #endif
 
