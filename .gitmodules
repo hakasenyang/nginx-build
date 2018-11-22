@@ -33,3 +33,6 @@
 [submodule "lib/ngx_http_geoip2_module"]
 	path = lib/ngx_http_geoip2_module
 	url = https://github.com/leev/ngx_http_geoip2_module.git
+[submodule "lib/nginx-module-vts"]
+	path = lib/nginx-module-vts
+	url = https://github.com/vozlt/nginx-module-vts
