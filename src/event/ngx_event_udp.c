@@ -581,14 +581,6 @@ ngx_lookup_udp_connection(ngx_listening_t *ls, struct sockaddr *sockaddr,
         }
     }
 
-#else
-
-void
-ngx_delete_udp_connection(void *data)
-{
-    return;
-}
-
 #endif
 
     node = ls->rbtree.root;
@@ -826,6 +818,13 @@ void ngx_event_recvmsg(ngx_event_t *ev)
         ls->handler(c);
 
     } while (ev->available);
+}
+
+
+void
+ngx_delete_udp_connection(void *data)
+{
+    return;
 }
 
 
