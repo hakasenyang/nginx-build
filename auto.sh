@@ -40,7 +40,7 @@ fi
 if [ "$BITCHK" = 64 ]; then
     if [ ! -f "lib/zlib/Makefile" ]; then
         cd lib/zlib
-        ./configure
+        ./configure --64
         cd ../..
     fi
 else
