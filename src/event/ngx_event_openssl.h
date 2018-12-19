@@ -107,6 +107,7 @@ struct ngx_ssl_connection_s {
     unsigned                    try_early_data:1;
     unsigned                    in_early:1;
     unsigned                    early_preread:1;
+    unsigned                    write_blocked:1;
 
     ngx_ssl_dyn_rec_t           dyn_rec;
     ngx_msec_t                  dyn_rec_last_write;
