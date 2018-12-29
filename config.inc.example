@@ -48,7 +48,7 @@ FANCYINDEX=1
 GEOIP2=1
 
 ### nginx-module-vts
-VTS=1
+VTS=0
 
 ##########################
 ### nginx install path ###
