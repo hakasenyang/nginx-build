@@ -102,7 +102,7 @@ if [ "$GEOIP2" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/ng
 if [ "$VTS" = 1 ]; then BUILD_MODULES="${BUILD_MODULES} --add-module=./lib/nginx-module-vts"; fi
 
 auto/configure \
---with-cc-opt="-DTCP_FASTOPEN=23 ${BUILD_BIT}${BUILD_LTO}${TEMP_OPT} -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS" \
+--with-cc-opt="-DTCP_FASTOPEN=23 ${BUILD_BIT}${BUILD_LTO} ${TEMP_OPT} -g -O3 -march=native -fstack-protector-strong -fuse-ld=gold -fuse-linker-plugin --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wno-strict-aliasing -Wp,-D_FORTIFY_SOURCE=2 -gsplit-dwarf -DNGX_HTTP_HEADERS" \
 --with-ld-opt="${BUILD_LD} ${BUILD_LTO}" \
 --with-openssl-opt="enable-weak-ssl-ciphers no-ssl3-method -march=native -ljemalloc ${BUILD_OPENSSL_LTO}" \
 --builddir=objs --prefix=${NGX_PREFIX} \
