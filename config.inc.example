@@ -32,8 +32,8 @@ LTO=1
 ### PageSpeed
 PAGESPEED=0
 
-### nginx-rtmp-module
-RTMP=0
+### nginx-http-flv-module
+FLV=0
 
 ### naxsi
 NAXSI=1
