@@ -258,7 +258,9 @@ ngx_event_recvmsg(ngx_event_t *ev)
             rev = c->read;
 
             c->udp->buffer = &buf;
+
             rev->ready = 1;
+            rev->active = 0;
 
             rev->handler(rev);
 
@@ -267,6 +269,7 @@ ngx_event_recvmsg(ngx_event_t *ev)
             }
 
             rev->ready = 0;
+            rev->active = 1;
 
             goto next;
         }
@@ -345,6 +348,7 @@ ngx_event_recvmsg(ngx_event_t *ev)
         rev = c->read;
         wev = c->write;
 
+        rev->active = 1;
         wev->ready = 1;
 
         rev->log = log;
@@ -438,7 +442,9 @@ ngx_udp_shared_recv(ngx_connection_t *c, u_char *buf, size_t size)
     ngx_memcpy(buf, b->pos, n);
 
     c->udp->buffer = NULL;
+
     c->read->ready = 0;
+    c->read->active = 1;
 
     return n;
 }
