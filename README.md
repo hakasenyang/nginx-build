@@ -28,8 +28,8 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - ssl_prefer_server_ciphers : On
     - ssl_ecdh_curve : X25519:P-256:P-384:P-224:P-521
     - DO NOT USE **ssl_dhparam**. Not required.
-- TLS v1.3 (draft 23, 26, 28, **final**)
-    - Use OpenSSL-3.0.0-dev (**draft 23, 26, 28, final**)
+- TLS v1.3 (**final**)
+    - Use OpenSSL-3.0.0-dev (**final**)
     - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [buik](https://gitlab.com/buik/openssl/blob/openssl-patch/openssl-1.1))
     - My OpenSSL patch is [here](https://github.com/hakasenyang/openssl-patch).
 - Prefers ChaCha20 suites with clients that don't have AES-NI(AES hardware acceleration) (e.g., Android devices)
