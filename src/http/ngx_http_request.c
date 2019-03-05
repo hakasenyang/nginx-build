@@ -870,15 +870,15 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
 
     clcf = ngx_http_get_module_loc_conf(hc->conf_ctx, ngx_http_core_module);
 
+    if (c->ssl->handshaked) {
+        *ad = SSL_AD_NO_RENEGOTIATION;
+        return SSL_TLSEXT_ERR_ALERT_FATAL;
+    }
+
     servername = SSL_get_servername(ssl_conn, TLSEXT_NAMETYPE_host_name);
 
     if (servername == NULL) {
         return (clcf->strict_sni) ? SSL_TLSEXT_ERR_ALERT_FATAL : SSL_TLSEXT_ERR_OK;
-    }
-
-    if (c->ssl->handshaked) {
-        *ad = SSL_AD_NO_RENEGOTIATION;
-        return SSL_TLSEXT_ERR_ALERT_FATAL;
     }
 
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, c->log, 0,
