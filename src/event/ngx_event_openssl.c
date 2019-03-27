@@ -4690,6 +4690,7 @@ ngx_ssl_get_subject_dn(ngx_connection_t *c, ngx_pool_t *pool, ngx_str_t *s)
 
     name = X509_get_subject_name(cert);
     if (name == NULL) {
+        X509_free(cert);
         return NGX_ERROR;
     }
 
@@ -4741,6 +4742,7 @@ ngx_ssl_get_issuer_dn(ngx_connection_t *c, ngx_pool_t *pool, ngx_str_t *s)
 
     name = X509_get_issuer_name(cert);
     if (name == NULL) {
+        X509_free(cert);
         return NGX_ERROR;
     }
 
