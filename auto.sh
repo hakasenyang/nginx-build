@@ -170,6 +170,12 @@ mkdir -p ${NGX_LIB}
 
 ### Check for old files
 if [ -f "${NGX_SBIN_PATH}.old" ]; then
+    ### Test nginx configuration.
+    "$NGX_SBIN_PATH" -t > /dev/null 2>&1
+    if test $? -ne 0; then
+        echo "Failed nginx configuration test."
+        exit 1
+    fi
     sleep 1
     rm ${NGX_SBIN_PATH}.old
     systemctl restart nginx
