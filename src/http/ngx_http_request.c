@@ -912,6 +912,10 @@ ngx_http_ssl_servername(ngx_ssl_conn_t *ssl_conn, int *ad, void *arg)
     }
 
     if (rc == NGX_DECLINED) {
+        // If SNI is not needed (1 server, etc.), do not apply.
+        if (hc->addr_conf->virtual_names == NULL) {
+            return SSL_TLSEXT_ERR_OK;
+        }
         return (clcf->strict_sni) ? SSL_TLSEXT_ERR_ALERT_FATAL : SSL_TLSEXT_ERR_OK;
     }
 
