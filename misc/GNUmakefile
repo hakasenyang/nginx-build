@@ -82,7 +82,7 @@ win32:
 		--with-mail						\
 		--with-stream						\
 		--with-openssl=$(OBJS)/lib/$(OPENSSL)			\
-		--with-openssl-opt=no-asm				\
+		--with-openssl-opt="no-asm no-tests -D_WIN32_WINNT=0x0501" \
 		--with-http_ssl_module					\
 		--with-mail_ssl_module					\
 		--with-stream_ssl_module
