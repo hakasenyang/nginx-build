@@ -29,7 +29,7 @@ example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - ssl_session_timeout : 64800 (< TLSv1.3)
     - ssl_session_timeout_tls13 : 172800 (TLSv1.3 only)
     - **ssl_dhparam** 는 사용하지 마십시오. 필요 없습니다.
-    - 오래 된 브라우저에 대해 지원하려면 아래 설정을 이용하십시오. (TLS 버전)
+    - 오래된 브라우저를 지원하려면 아래 설정을 이용하십시오. (TLS 버전)
     - ssl_protocols : TLSv1 TLSv1.1 TLSv1.2 TLSv1.3
     - ssl_ciphers : [TLS13+AESGCM+AES128|TLS13+CHACHA20]:TLS13+AESGCM+AES256:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES
 - TLS v1.3 (**final**)
