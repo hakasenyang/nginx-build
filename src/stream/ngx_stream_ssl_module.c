@@ -14,7 +14,7 @@ typedef ngx_int_t (*ngx_ssl_variable_handler_pt)(ngx_connection_t *c,
     ngx_pool_t *pool, ngx_str_t *s);
 
 
-#define NGX_DEFAULT_CIPHERS     "[TLS13+AESGCM+AES128|TLS13+CHACHA20]:TLS13+AESGCM+AES256:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES"
+#define NGX_DEFAULT_CIPHERS     "[TLS13+AESGCM+AES128|TLS13+CHACHA20]:TLS13+AESGCM+AES256:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA"
 #define NGX_DEFAULT_ECDH_CURVE  "X25519:P-256:P-384:P-224:P-521"
 
 
@@ -187,6 +187,13 @@ static ngx_command_t  ngx_stream_ssl_commands[] = {
       ngx_conf_set_sec_slot,
       NGX_STREAM_SRV_CONF_OFFSET,
       offsetof(ngx_stream_ssl_conf_t, session_timeout),
+      NULL },
+
+    { ngx_string("ssl_session_timeout_tls13"),
+      NGX_STREAM_MAIN_CONF|NGX_STREAM_SRV_CONF|NGX_CONF_TAKE1,
+      ngx_conf_set_sec_slot,
+      NGX_STREAM_SRV_CONF_OFFSET,
+      offsetof(ngx_stream_ssl_conf_t, session_timeout_tls13),
       NULL },
 
     { ngx_string("ssl_crl"),
@@ -600,6 +607,7 @@ ngx_stream_ssl_create_conf(ngx_conf_t *cf)
     scf->verify_depth = NGX_CONF_UNSET_UINT;
     scf->builtin_session_cache = NGX_CONF_UNSET;
     scf->session_timeout = NGX_CONF_UNSET;
+    scf->session_timeout_tls13 = NGX_CONF_UNSET;
     scf->session_tickets = NGX_CONF_UNSET;
     scf->session_ticket_keys = NGX_CONF_UNSET_PTR;
 
@@ -619,14 +627,16 @@ ngx_stream_ssl_merge_conf(ngx_conf_t *cf, void *parent, void *child)
                          prev->handshake_timeout, 60000);
 
     ngx_conf_merge_value(conf->session_timeout,
-                         prev->session_timeout, 300);
+                         prev->session_timeout, 64800);
+
+    ngx_conf_merge_value(conf->session_timeout,
+                         prev->session_timeout, 172800);
 
     ngx_conf_merge_value(conf->prefer_server_ciphers,
                          prev->prefer_server_ciphers, 1);
 
     ngx_conf_merge_bitmask_value(conf->protocols, prev->protocols,
-                         (NGX_CONF_BITMASK_SET|NGX_SSL_TLSv1
-                          |NGX_SSL_TLSv1_1|NGX_SSL_TLSv1_2|NGX_SSL_TLSv1_3));
+                         (NGX_CONF_BITMASK_SET|NGX_SSL_TLSv1_2|NGX_SSL_TLSv1_3));
 
     ngx_conf_merge_uint_value(conf->verify, prev->verify, 0);
     ngx_conf_merge_uint_value(conf->verify_depth, prev->verify_depth, 1);
@@ -787,7 +797,7 @@ ngx_stream_ssl_merge_conf(ngx_conf_t *cf, void *parent, void *child)
 
     if (ngx_ssl_session_cache(&conf->ssl, &ngx_stream_ssl_sess_id_ctx,
                               conf->certificates, conf->builtin_session_cache,
-                              conf->shm_zone, conf->session_timeout)
+                              conf->shm_zone, conf->session_timeout, conf->session_timeout_tls13)
         != NGX_OK)
     {
         return NGX_CONF_ERROR;

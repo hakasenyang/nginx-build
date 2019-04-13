@@ -35,6 +35,7 @@ typedef struct {
     ssize_t          builtin_session_cache;
 
     time_t           session_timeout;
+    time_t           session_timeout_tls13;
 
     ngx_array_t     *certificates;
     ngx_array_t     *certificate_keys;

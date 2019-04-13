@@ -3109,11 +3109,12 @@ ngx_ssl_error(ngx_uint_t level, ngx_log_t *log, ngx_err_t err, char *fmt, ...)
 ngx_int_t
 ngx_ssl_session_cache(ngx_ssl_t *ssl, ngx_str_t *sess_ctx,
     ngx_array_t *certificates, ssize_t builtin_session_cache,
-    ngx_shm_zone_t *shm_zone, time_t timeout)
+    ngx_shm_zone_t *shm_zone, time_t timeout, time_t timeout_tls13)
 {
     long  cache_mode;
 
     SSL_CTX_set_timeout(ssl->ctx, (long) timeout);
+    SSL_CTX_set_timeout_tls13(ssl->ctx, (long) timeout_tls13);
 
     if (ngx_ssl_session_id_context(ssl, sess_ctx, certificates) != NGX_OK) {
         return NGX_ERROR;
