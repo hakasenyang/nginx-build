@@ -22,11 +22,16 @@ example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 ## 기능 목록
 - SSL Cipher 자동 설정
     - **아래 내용은 자동으로 설정됩니다. 따라서, 필요하지 않는 한 해당 설정은 nginx.conf 내에서 설정하지 마십시오.**
-    - ssl_protocols : TLSv1 TLSv1.1 TLSv1.2 TLSv1.3
-    - ssl_ciphers : [TLS13+AESGCM+AES128|TLS13+AESGCM+AES256|TLS13+CHACHA20]:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES
+    - ssl_protocols : TLSv1.2 TLSv1.3
+    - ssl_ciphers : [TLS13+AESGCM+AES128|TLS13+CHACHA20]:TLS13+AESGCM+AES256:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA
     - ssl_prefer_server_ciphers : On
     - ssl_ecdh_curve : X25519:P-256:P-384:P-224:P-521
+    - ssl_session_timeout : 64800 (>TLSv1.3)
+    - ssl_session_timeout_tls13 : 172800 (TLSv1.3 only)
     - **ssl_dhparam** 는 사용하지 마십시오. 필요 없습니다.
+    - 오래 된 브라우저에 대해 지원하려면 아래 설정을 이용하십시오. (TLS 버전)
+    - ssl_protocols : TLSv1 TLSv1.1 TLSv1.2 TLSv1.3
+    - ssl_ciphers : [TLS13+AESGCM+AES128|TLS13+CHACHA20]:TLS13+AESGCM+AES256:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES
 - TLS v1.3 (**final**)
     - OpenSSL-3.0.0-dev 사용. (**final**)
     - OpenSSL equal preference patch 사용 ([BoringSSL](https://github.com/google/boringssl) & [buik](https://gitlab.com/buik/openssl/blob/openssl-patch/openssl-1.1))
@@ -40,6 +45,7 @@ example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 - HPACK, SSL Dynamic TLS Records 지원. (Thanks to cloudflare!)
 - SSL Strict-SNI (예: http { strict_sni on; } ) (Thanks to [@JemmyLoveJenny](https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-421551872))
     - Strict SNI 는 두 개 이상의 server 설정을 필요로 합니다. (server { listen 443 ssl }).
+    - 만약 두 개 이상의 server 설정이 없다면, SNI 은 활성화되지 않으며 Strict SNI 도 동작하지 않습니다.
     - 인증서는 중복으로 설정해도 상관 없습니다.
     - "strict_sni_header on" 을 사용하면 잘못 된 헤더에 대한 응답을 하지 않습니다. (strict_sni 와 같이 사용해야만 적용됩니다.)
 - GeoIP2 Module - [Issues #2](https://github.com/hakasenyang/nginx-build/issues/2)
@@ -47,6 +53,7 @@ example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 
 ## 차후 추가 될 기능
 - apt, yum 설치. (rpm, deb, etc.)
+- OCSP Stapling 사용 시 메모리 공유(shm)
 - 기타.
 
 ## 더 이상 사용하지 않는 기능

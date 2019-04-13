@@ -23,11 +23,16 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 ## Features
 - Auto SSL Cipher settings
     - **The following information is preset. Do not set it yourself unless you need it.**
-    - ssl_protocols : TLSv1 TLSv1.1 TLSv1.2 TLSv1.3
-    - ssl_ciphers : [TLS13+AESGCM+AES128|TLS13+AESGCM+AES256|TLS13+CHACHA20]:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES
+    - ssl_protocols : TLSv1.2 TLSv1.3
+    - ssl_ciphers : [TLS13+AESGCM+AES128|TLS13+CHACHA20]:TLS13+AESGCM+AES256:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA
     - ssl_prefer_server_ciphers : On
     - ssl_ecdh_curve : X25519:P-256:P-384:P-224:P-521
+    - ssl_session_timeout : 64800 (>TLSv1.3)
+    - ssl_session_timeout_tls13 : 172800 (TLSv1.3 only)
     - DO NOT USE **ssl_dhparam**. Not required.
+    - Use the settings below to support older browsers. (TLS Protocol)
+    - ssl_protocols : TLSv1 TLSv1.1 TLSv1.2 TLSv1.3
+    - ssl_ciphers : [TLS13+AESGCM+AES128|TLS13+CHACHA20]:TLS13+AESGCM+AES256:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES
 - TLS v1.3 (**final**)
     - Use OpenSSL-3.0.0-dev (**final**)
     - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [buik](https://gitlab.com/buik/openssl/blob/openssl-patch/openssl-1.1))
@@ -41,6 +46,7 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 - Support HPACK, SSL Dynamic TLS Records. (Thanks to cloudflare!)
 - SSL Strict-SNI (ex: http { strict_sni on; } ) (Thanks to [@JemmyLoveJenny](https://github.com/hakasenyang/openssl-patch/issues/1#issuecomment-421551872))
     - Strict SNI requires at least two ssl server settings (server { listen 443 ssl }).
+    - If you do not have two server settings, SNI will not be enabled and Strict SNI will not be enabled.
     - It does not matter what kind of certificate or duplicate.
     - Use "strict_sni_header on" if you do not want to respond to invalid headers. (only with strict_sni)
 - GeoIP2 Module - [Issues #2](https://github.com/hakasenyang/nginx-build/issues/2)
@@ -48,6 +54,7 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
 
 ## Upcoming Features
 - Auto build (rpm, deb, etc.)
+- Memory sharing(**shm**) for OCSP Stapling.
 - ETC.
 
 ## Deprecated Features
