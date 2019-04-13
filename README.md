@@ -27,7 +27,7 @@ Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
     - ssl_ciphers : [TLS13+AESGCM+AES128|TLS13+CHACHA20]:TLS13+AESGCM+AES256:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA
     - ssl_prefer_server_ciphers : On
     - ssl_ecdh_curve : X25519:P-256:P-384:P-224:P-521
-    - ssl_session_timeout : 64800 (>TLSv1.3)
+    - ssl_session_timeout : 64800 (< TLSv1.3)
     - ssl_session_timeout_tls13 : 172800 (TLSv1.3 only)
     - DO NOT USE **ssl_dhparam**. Not required.
     - Use the settings below to support older browsers. (TLS Protocol)
