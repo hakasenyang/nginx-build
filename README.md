@@ -1,7 +1,7 @@
 # Hakase-nginx
 **My nginx build files.**
 
-Example Web Server - [https://ssl.hakase.io/](https://ssl.hakase.io/)
+Example Web Server - [https://ssl.haka.se/](https://ssl.haka.se/)
 
 ## Please install dependency library.
 - CentOS / Red Hat - `yum install jemalloc-devel libuuid-devel libatomic libatomic_ops-devel expat-devel unzip autoconf automake libtool gd-devel libmaxminddb-devel libxslt-devel libxml2-devel gcc-c++ curl`
