@@ -33,8 +33,8 @@ Example Web Server - [https://ssl.haka.se/](https://ssl.haka.se/)
     - Use the settings below to support older browsers. (TLS Protocol)
     - ssl_protocols : TLSv1 TLSv1.1 TLSv1.2 TLSv1.3
     - ssl_ciphers : [TLS13+AESGCM+AES128|TLS13+CHACHA20]:TLS13+AESGCM+AES256:[EECDH+ECDSA+AESGCM+AES128|EECDH+ECDSA+CHACHA20]:EECDH+ECDSA+AESGCM+AES256:EECDH+ECDSA+AES128+SHA:EECDH+ECDSA+AES256+SHA:[EECDH+aRSA+AESGCM+AES128|EECDH+aRSA+CHACHA20]:EECDH+aRSA+AESGCM+AES256:EECDH+aRSA+AES128+SHA:EECDH+aRSA+AES256+SHA:RSA+AES128+SHA:RSA+AES256+SHA:RSA+3DES
-- TLS v1.3 (**final**)
-    - Use OpenSSL-3.0.0-dev (**final**)
+- TLS v1.3
+    - Use OpenSSL-3.0.0-alpha3-dev
     - Use OpenSSL equal preference patch ([BoringSSL](https://github.com/google/boringssl) & [buik](https://gitlab.com/buik/openssl/blob/openssl-patch/openssl-1.1))
     - My OpenSSL patch is [here](https://github.com/hakasenyang/openssl-patch).
 - Prefers ChaCha20 suites with clients that don't have AES-NI(AES hardware acceleration) (e.g., Android devices)
