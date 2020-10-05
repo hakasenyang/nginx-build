@@ -1,6 +1,8 @@
 # Hakase-nginx
 **My nginx build files.**
 
+## This repository is no longer operational. Use an alternative such as tengine.
+
 Example Web Server - [https://ssl.haka.se/](https://ssl.haka.se/)
 
 ## Please install dependency library.
